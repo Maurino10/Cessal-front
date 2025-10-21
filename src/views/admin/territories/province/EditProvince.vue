@@ -1,0 +1,98 @@
+<template>
+    <VCardForm 
+        title="Modification de la province"
+        subtitle="Modifiez les informations de la province sélectionnée"
+        width="600"
+    >
+        <template #card_text>
+            <v-row>
+                <v-col class="!py-0">
+                    <VInput 
+                        label="Nom province" 
+                        placeholder="Nom de la province" 
+                        v-model:model="form.name" 
+                        v-model:error="errors.name" 
+                    />
+                </v-col>
+            </v-row>
+        </template>
+        <template #card_actions>
+            <VButton 
+                title="Annuler" 
+                class="btn-cancel" 
+                @click="closeDialog"  
+            />
+            <VButton 
+                title="Mettre à jour" 
+                class="btn-submit" 
+                @click="editProvince" 
+            />
+        </template>
+    </VCardForm>
+</template>
+
+<script setup>
+// Imports
+    import { onMounted, reactive, ref } from 'vue';
+    import VButton from '@/components/VButton.vue';
+    import VInput from '@/components/VInput.vue';
+    import VCardForm from '@/components/VCardForm.vue';
+    import provinceService from '@/services/territories/provinceService';
+    import formErrorUtils from "@/utils/formErrorUtils";
+    import { useSnackbar } from "@/composables/useSnackbar";
+    import { useLoader } from "@/composables/useLoader";
+
+
+// Variables & state
+    const model = defineModel();
+    const props = defineProps(['data']);
+    const emit = defineEmits(['reload']);
+
+    const { openSnackbar } = useSnackbar();
+    const { openLoader } = useLoader();
+
+    const idProvince = ref(null);
+
+
+    const form = reactive({
+        name: null
+    })
+
+    const errors = reactive({
+        name: null
+    })
+
+
+    
+// Functions
+    const closeDialog = () => {
+        model.value = !model.value
+    }
+
+    const editProvince = async () => {
+        openLoader(true);
+        
+        try {
+            const response = await provinceService.updateProvince(idProvince.value, form);
+            
+            setTimeout(() => {
+                emit('reload');
+                closeDialog();
+                openSnackbar("Province mise à jour avec succès.", "success");
+                openLoader(false);
+            }, 1000)
+        } catch (error) {
+            openLoader(false);
+            
+            if (error.response.data.errors) {
+                formErrorUtils.setErrors(error.response.data.errors, errors)
+            }
+        }
+    }
+
+// Lifecycle hooks
+    onMounted(() => {
+        idProvince.value = props.data.id
+        form.name = props.data.name
+    })  
+</script>
