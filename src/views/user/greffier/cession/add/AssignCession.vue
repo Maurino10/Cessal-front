@@ -1,14 +1,13 @@
 <template>
 
-    <VBreadCrumb 
+   <VBreadCrumb v-if="cession"
         :items="[
             {title: 'cessions', disabled: true},
-            {title: `${route.params.id}`, disabled: false},
+            {title: `${cession.numero_dossier}`, disabled: false},
         ]" 
     />
 
-    <VMainHeader 
-        v-if="cession"
+    <VMainHeader v-if="cession"
         :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
         :title="cession.numero_dossier" 
         subtitle="Numéro du dossier" 

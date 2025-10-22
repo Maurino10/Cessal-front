@@ -4,6 +4,7 @@
         <h3 class="text-xl font-bold text-gray-700">Liste des emprunteurs</h3>
 
         <VButton
+            v-if="props.cession.signed === 0"
             title="Ajouter Emprunteur" 
             icon="mdi-plus"
             class="btn-cancel"
@@ -11,8 +12,7 @@
         />
     </div>
 
-    <v-skeleton-loader
-      v-if="loading"
+    <v-skeleton-loader v-if="loading"
       type="table-tbody"
       class="mt-4"
     />
@@ -38,7 +38,7 @@
             <template #tbody>
                 <tr v-for="(b, index) in borrowers" :key="index">
                     <td class="font-bold">
-                        {{ b.party.last_name }} {{ b.party.first_name }}
+                        {{ b.natural_person.last_name }} {{ b.natural_person.first_name }}
                     </td>
                     
                     <td>
@@ -75,8 +75,8 @@
                     <td class="text-center">
                         <div class="flex justify-center gap-1">
                             <VTableAction 
-                                :actions="actions" 
-                                :title="b.party.first_name"
+                                :actions="props.cession.signed === 0 ? actions : [actions[0]]" 
+                                :title="b.natural_person.first_name"
                                 :objet="b"
                                 @action="handleAction"
                             /> 
@@ -150,6 +150,11 @@
 
     const route = useRoute();
     const router = useRouter();
+
+    const props = defineProps({
+        id: [String, Number],
+        cession: Object
+    });
 
     const borrowers = ref(null);
 

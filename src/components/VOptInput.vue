@@ -7,6 +7,7 @@
         :length="props.length" 
         density="compact" 
         variant="outlined" 
+        autocomplete="off"
         :error="modelError ? true : false"
         @update:model-value="modelError = null"
         :disabled="disabled"

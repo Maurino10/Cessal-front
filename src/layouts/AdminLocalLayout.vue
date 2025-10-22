@@ -21,7 +21,7 @@
     const profil = ref(null); 
 
     const navigations = [
-      {icon: 'mdi-chart-donut', title: 'Cessions', link: '/ministere/cessions'},
+      {icon: 'mdi-chart-donut', title: 'Cessions', link: '/administrateur/local/cessions'},
     ]
 
     const signUp  = async () => {

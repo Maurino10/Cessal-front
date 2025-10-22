@@ -1,15 +1,14 @@
 <template>
 
-    <VBreadCrumb 
+   <VBreadCrumb v-if="cession"
         :items="[
             {title: 'cessions', disabled: true},
-            {title: `${route.params.id}`, disabled: false},
+            {title: `${cession.numero_dossier}`, disabled: false},
         ]" 
     />
 
     <div class="main-body">
-        <VMainHeader 
-            v-if="cession"
+        <VMainHeader v-if="cession"
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
             :title="cession.numero_dossier" 
             subtitle="Numéro du dossier" 
@@ -174,6 +173,8 @@
         try {
             const response = await magistratService.getAllCessionLenderByCession(route.params.id);
             lenders.value = response.data.lenders;
+
+            console.log(lenders.value);
         } catch (error) {
             
         }

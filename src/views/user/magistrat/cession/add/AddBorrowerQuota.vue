@@ -1,6 +1,6 @@
 <template>
     <VCardForm
-        :title="`${ props.borrower.party.last_name } ${ props.borrower.party.first_name  }`"
+        :title="`${ props.borrower.natural_person.last_name } ${ props.borrower.natural_person.first_name  }`"
         width="700"
         class="!max-h-[95vh]"
     >
@@ -15,7 +15,7 @@
                             </p>
 
                             <h5 class="text-base font-medium">
-                                {{ props.borrower.party.cin }}
+                                {{ props.borrower.natural_person.cin }}
                             </h5>
                         </div>
                     </v-col>
@@ -29,7 +29,7 @@
                             </p>
     
                             <h5 class="text-base font-medium">
-                                {{ props.borrower.party.address }}
+                                {{ props.borrower.natural_person.address }}
                             </h5>
                         </div>
                     </v-col>

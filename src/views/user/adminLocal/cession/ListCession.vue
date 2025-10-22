@@ -122,7 +122,7 @@
     import VMainHeader from '@/components/VMainHeader.vue';
     import VTable from '@/components/VTable.vue';
     import format from '@/utils/format';
-    import ministereService from '@/services/cessions/ministereService';
+    import adminLocalService from '@/services/cessions/adminLocalService';
     import FilterCession from './FilterCession.vue';
     import ExportCession from './ExportCession.vue';
     
@@ -139,7 +139,7 @@
 // Functions
 
     const details = (obj) => {
-        router.push({ name: 'ministere-cession-details', params: { id: obj.id } })
+        router.push({ name: 'admin-local-cession-details', params: { id: obj.id } })
     }
 
     const filterCession = async (state, start, end) => {
@@ -151,7 +151,7 @@
             
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await ministereService.filterCessionByTPI(
+            const response = await adminLocalService.filterCessionByTPI(
                 profil.user.id_tpi, 
                 statut.value, 
                 dateStart.value, 
@@ -169,7 +169,7 @@
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await ministereService.getAllCessionByTPI(profil.user.id_tpi);
+            const response = await adminLocalService.getAllCessionByTPI(profil.user.id_tpi);
             cessions.value = response.data.cessions
 
         } catch (error) {

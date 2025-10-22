@@ -11,29 +11,46 @@
             :icon="{ icon: 'mdi-tune', bgColor: '!bg-slate-500'}"
             title="Provision" 
             subtitle="La provision applicable aux déclarations de cession." 
-        ></VMainHeader>
+        >
+            <template #actions>
+                <VButton 
+                    title="Nouvelle provision" 
+                    icon="mdi-plus" 
+                    class="btn-add" 
+                    @click="handleAdd"
+                />
+            </template>
+        </VMainHeader>
     
-        <v-skeleton-loader
-          v-if="loading"
+        <v-skeleton-loader v-if="loading"
           type="card"
           class="mt-4"
         />
     
-    
-        <div v-else-if="provision" class="flex items-center justify-between p-8 rounded-lg highlight">
-            <div class="flex items-center gap-4">
-                <v-icon 
-                    icon="mdi-cash"
-                    size="96"
-                    class="text-emerald-700"
-                ></v-icon>
-                <h4 class="text-4xl text-white">{{ format.formatMontant(provision.provision_amount) }}</h4>
-            </div>
-            <div>
-                <VButton
-                    title="Modifier"
-                    @click="handleEdit(provision)"
-                />
+        
+
+        <div v-else-if="provisions" class="flex flex-col gap-2">
+            <div 
+                v-for="(provision, index) in provisions" :key="index"
+                class="flex items-center justify-between p-8 rounded-lg highlight"
+            >
+                <div class="flex items-center gap-4">
+                    <v-icon 
+                        icon="mdi-cash"
+                        size="96"
+                        class="text-emerald-700"
+                    ></v-icon>
+                    <h4 class="text-4xl text-white">{{ format.formatMontant(provision.provision_amount) }}</h4>
+                </div>
+                <div class="flex flex-col gap-2 text-lg text-gray-200">
+                    <p>{{ format.formatDate(provision.date_provision) }}</p>
+                </div>
+                <div>
+                    <VButton
+                        title="Modifier"
+                        @click="handleEdit(provision)"
+                    />
+                </div>
             </div>
         </div>
     
@@ -97,7 +114,7 @@
     const action = ref(null);
     const objet = ref(null);
 
-    const provision = ref(null);
+    const provisions = ref(null);
 
 // Functions 
 
@@ -115,7 +132,7 @@
     const fetchProvision = async () => {
         try {
             const response = await provisionService.getProvision();
-            provision.value = response.data.provision;
+            provisions.value = response.data.provisions;
         } catch (error) {
             console.error(error.response.data);
         }

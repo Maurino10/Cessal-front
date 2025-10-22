@@ -85,7 +85,6 @@
     // Variables & state
     
     const props = defineProps(['cession']);
-    const emit = defineEmits(['reload']);
 // Functions
 
 // Lifecycle hooks

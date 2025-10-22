@@ -11,6 +11,7 @@
         variant="outlined" 
         single-line
         clearable
+        autocomplete="off"
         :error-messages="modelError ? [modelError] : []"
         @update:model-value="modelError = null"
         :disabled="disabled"

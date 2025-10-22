@@ -2,7 +2,8 @@
     <div class="flex items-center justify-between">
         <h3 class="text-xl font-bold text-gray-700">Pièces Justificatives</h3>
 
-        <VButton 
+        <VButton
+            v-if="props.cession.signed === 0"
             title="Ajouter Pièces"
             icon="mdi-plus"
             class="btn-cancel"
@@ -42,6 +43,7 @@
                     ></v-icon>
                     
                     <v-icon
+                        v-if="props.cession.signed === 0"
                         icon="mdi-trash-can-outline"
                         size="20"
                         class="!text-red-500"
@@ -86,6 +88,11 @@
     const route = useRoute();
 
     const router = useRouter();
+
+    const props = defineProps({
+        id: [String, Number],
+        cession: Object
+    });
     
     const justificatifs = ref(null);
 

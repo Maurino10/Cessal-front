@@ -17,26 +17,28 @@
                 <template #thead>
                     <tr>
                         <th># Prêteur</th>
-                        <th>CIN</th>
                         <th>Adresse</th>
+                        <th>CIN</th>
                     </tr>
                 </template>
                 
                 <template #tbody>
                     <tr v-for="(p, index) in lenders" :key="index">
                         <td class="font-bold">
-                            {{ p.party?.last_name }}
-                            {{ p.party?.first_name }}
-                            {{ p.entity?.name }}
+                            {{ p.natural_person?.last_name }}
+                            {{ p.natural_person?.first_name }}
+                            {{ p.legal_person?.name }}
                         </td>
-
-                        <td class="font-mono">
-                            {{ p.party?.cin }}
-                        </td>
-
+                        
                         <td>
-                            {{ p.party?.address }}
+                            {{ p.natural_person_address?.address }}
+                            {{ p.legal_person?.address }}
                         </td>
+                        
+                        <td class="font-mono">
+                            {{ p.natural_person?.cin }}
+                        </td>
+
                     </tr>
                 </template>
             </VTable>
@@ -129,6 +131,7 @@
         try {
             const response = await greffierService.getAllCessionLenderByCession(route.params.id);
             lenders.value = response.data.lenders;
+
         } catch (error) {
             console.error(error);
         }

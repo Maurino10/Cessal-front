@@ -16,6 +16,15 @@
                     />
                 </v-col>
             </v-row>
+            <v-row>
+                <v-col class="!py-0">
+                    <VInputDate 
+                        label="Date" 
+                        v-model:model="form.date_provision" 
+                        v-model:error="errors.date_provision" 
+                    />
+                </v-col>
+            </v-row>
         </template>
         <template #card_actions>
             <VButton 
@@ -37,6 +46,7 @@
     import { onMounted, reactive, ref } from 'vue';
     import VButton from '@/components/VButton.vue';
     import VInput from '@/components/VInput.vue';
+    import VInputDate from '@/components/VInputDate.vue';
     import VCardForm from '@/components/VCardForm.vue';
     import provisionService from '@/services/settings/provisionService';
     import formErrorUtils from "@/utils/formErrorUtils";
@@ -54,14 +64,15 @@
     const { openLoader } = useLoader();
 
     const form = reactive({
-        provision_amount: null
+        provision_amount: null,
+        date_provision: null
     })
 
     const errors = reactive({
-        provision_amount: null
-    })
+        provision_amount: null,
+        date_provision: null
+    });
 
-    
 // Functions
     const closeDialog = () => {
         model.value = !model.value
@@ -90,6 +101,7 @@
 // Lifecycle hooks
     onMounted(() => {
         idProvision.value = props.data.id;
-        form.provision_amount = props.data.provision_amount
+        form.provision_amount = props.data.provision_amount;
+        form.date_provision = props.data.date_provision;
     })
 </script>

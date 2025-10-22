@@ -55,28 +55,33 @@ const greffierRoutes = [
                 path: 'infos',
                 name: 'greffier-cession-infos',
                 component: () => import('../../views/user/greffier/cession/details/CessionInfo.vue'),
+                props: true
               },
               {
                 path: 'preteurs',
                 name: 'greffier-cession-lenders',
                 component: () => import('../../views/user/greffier/cession/details/CessionLender.vue'),
+                props: true
               },
               {
                 path: 'emprunteurs',
                 name: 'greffier-cession-borrowers',
                 component: () => import('../../views/user/greffier/cession/details/CessionBorrower.vue'),
+                props: true
 
               },
               {
                 path: 'justificatifs',
                 name: 'greffier-cession-justificatifs',
                 component: () => import('../../views/user/greffier/cession/details/CessionJustificatifs.vue'),
+                props: true
 
               },
               {
                 path: 'magistrat',
                 name: 'greffier-cession-magistrat',
                 component: () => import('../../views/user/greffier/cession/details/CessionMagistrat.vue'),
+                props: true
               },
               {
                 path: 'impressions',

@@ -5,7 +5,7 @@
         width="800"
     >   
         <template #card_text>
-            <div v-if="props.lender.type === 'person'">
+            <div v-if="props.lender.type === 'natural_person'">
                 <v-row>
                     <v-col class="!py-0">
                         <VInput label="Nom" placeholder="Entrer le nom du prêteur" type="text"
@@ -41,7 +41,7 @@
                 
                 <v-row>
                     <v-col class="!py-0">
-                        <VInput label="Adresse" placeholder="Entrer l'adresse du prêteur" type="text"
+                        <VCombobox v-if="naturalPersonAddress" label="Adresse" placeholder="Entrer l'adresse du prêteur" :items="naturalPersonAddress" value="id" title="address"
                             v-model:model="form.address"
                             v-model:error="errors.address"
                         />
@@ -52,11 +52,7 @@
             <div v-else>
                 <v-row>
                     <v-col class="!py-0">
-                        <!-- <VInput label="Nom" placeholder="Entrer le prêteur" type="text"
-                            v-model:model="form.name"
-                            v-model:error="errors.name"
-                        /> -->
-                        <VCombobox v-if="entities" label="Entités" placeholder="Entrer le prêteur" :items="entities" value="id" title="name"
+                        <VCombobox v-if="legalPersons" label="Entités" placeholder="Entrer le prêteur" :items="legalPersons" value="id" title="name"
                             v-model:model="form.name"
                             v-model:error="errors.name"
                         />
@@ -95,7 +91,8 @@
     const emit = defineEmits(['reload']);
 
     const genders = ref(null);
-    const entities = ref(null);
+    const legalPersons = ref(null);
+    const naturalPersonAddress= ref(null);
     
     const { openSnackbar } = useSnackbar();
     const { openLoader } = useLoader();
@@ -109,7 +106,8 @@
         address: null,
         gender: null,
         name: null,
-        tpi: null
+        tpi: null,
+        new_address: false
     });
     
     const errors = reactive({
@@ -129,8 +127,19 @@
     const editLender = async () => {
         openLoader(true);
 
-        try {   
-            const response = await greffierService.updateCessionLender(props.lender.id_cession, props.lender.id, form);
+        try {
+            
+            if (typeof form.address === 'object' && form.address !== null) {
+                form.new_address = false;
+                
+                const data = { ...form, address: form.address.id };
+
+                const response = await greffierService.updateCessionLender(props.lender.id_cession, props.lender.id, data);
+            } else {
+                form.new_address = true;
+
+                const response = await greffierService.updateCessionLenderNewAddress(props.lender.id_cession, props.lender.id, form);
+            }
             
             setTimeout(() => {
                 emit('reload');
@@ -161,29 +170,42 @@
             const profil = JSON.parse(localStorage.getItem('profil'));
 
             const response = await greffierService.getEntityByTPI(profil.user.tpi.id);
-            entities.value = response.data.entities;
+            legalPersons.value = response.data.legal_persons;
         } catch (error) {
             console.error(error.response.data);
         }
     };
+
+    const fetchAllAddressCessionNaturalPerson = async () => {
+        try {
+            const response = await greffierService.getAllAddressCessionNaturalPerson(props.lender.natural_person.id);
+            naturalPersonAddress.value = response.data.addresses;
+            
+        } catch (error) {
+            console.error(error.response.data);
+        }
+    }
 // Lifecycle hooks
 
     onMounted (async () => {
 
-        if (props.lender.type === 'person') {
-            await fetchAllGender();
+        if (props.lender.type === 'natural_person') {
+            await Promise.all([
+                fetchAllGender(),
+                fetchAllAddressCessionNaturalPerson()
+            ]);  
             form.type = props.lender.type; 
-            form.last_name = props.lender.party.last_name;
-            form.first_name = props.lender.party.first_name;
-            form.cin = props.lender.party.cin;
-            form.address = props.lender.party.address;
-            form.gender = props.lender.party.id_gender;
+            form.last_name = props.lender.natural_person.last_name;
+            form.first_name = props.lender.natural_person.first_name;
+            form.cin = props.lender.natural_person.cin;
+            form.address = props.lender.natural_person_address;
+            form.gender = props.lender.natural_person.id_gender;
         } else {
             await fetchEntityByTPI();
             const profil = JSON.parse(localStorage.getItem('profil'));
             form.tpi = profil.user.tpi.id
             form.type = props.lender.type; 
-            form.name = props.lender.entity.name
+            form.name = props.lender.legal_person.name
         }
         
     });

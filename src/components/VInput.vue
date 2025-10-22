@@ -9,6 +9,7 @@
             density="compact" 
             variant="outlined" 
             single-line
+            autocomplete="off"
             :error-messages="modelError ? [modelError] : []"
             @update:model-value="modelError = null"
             :readonly="props.readonly === true"
@@ -23,6 +24,7 @@
             density="compact" 
             variant="outlined" 
             single-line
+            autocomplete="off"
             :error-messages="modelError ? [modelError] : []"
             @update:model-value="modelError = null"
             :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"

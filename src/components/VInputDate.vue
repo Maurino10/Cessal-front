@@ -10,7 +10,8 @@
         variant="outlined" 
         color="#10b981"
         prepend-icon=""
-        single-line
+        single-
+        autocomplete="off"
         :error-messages="modelError ? [modelError] : []"
         @update:model-value="modelError = null"
         clearable

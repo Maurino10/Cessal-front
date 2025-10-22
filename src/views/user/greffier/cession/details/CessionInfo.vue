@@ -10,7 +10,7 @@
             <h3 class="text-xl font-bold text-gray-700">Informations Générales</h3>
             
             <VButton 
-                v-if="cession.status_cession != 4"
+                v-if="cession.signed === 0"
                 title="Modifier"
                 icon="mdi-pencil"
                 class="btn-cancel"

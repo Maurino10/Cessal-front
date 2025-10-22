@@ -10,33 +10,35 @@
             <template #thead>
                 <tr>
                     <th># Prêteur</th>
-                    <th>CIN</th>
                     <th>Adresse</th>
+                    <th>CIN</th>
                 </tr>
             </template>
             
             <template #tbody>
                 <tr v-for="(p, index) in props.lenders" :key="index">
-                    <template v-if="p.type === 'person'">
+                    <template v-if="p.type === 'natural_person'">
                         <td class="font-bold">
-                            {{ p.party?.last_name }}
-                            {{ p.party?.first_name }}
-                        </td>
-    
-                        <td class="font-mono">
-                            {{ p.party?.cin }}
+                            {{ p.natural_person?.last_name }}
+                            {{ p.natural_person?.first_name }}
                         </td>
     
                         <td>
-                            {{ p.party?.address }}
+                            {{ p.natural_person_address?.address }}
                         </td>
+                        
+                        <td class="font-mono">
+                            {{ p.natural_person?.cin }}
+                        </td>
+    
                     </template>
                     <template v-else>
                         <td class="font-bold">
-                            {{ p.entity?.name }}
+                            {{ p.legal_person?.name }}
                         </td>
     
                         <td>
+                            {{ p.legal_person?.address }}
                         </td>
     
                         <td>

@@ -17,8 +17,8 @@
                 <template #thead>
                     <tr>
                         <th># Emprunteur</th>
-                        <th>CIN</th>
                         <th>Adresse</th>
+                        <th>CIN</th>
                         <th class="text-end">Montant Revenu</th>
                     </tr>
                 </template>
@@ -26,16 +26,17 @@
                 <template #tbody>
                     <tr v-for="(b, index) in borrowers" :key="index">
                         <td class="font-bold">
-                            {{ b.party.last_name }} {{ b.party.first_name }}
+                            {{ b.natural_person.last_name }} {{ b.natural_person.first_name }}
+                        </td>
+                        
+                        <td>
+                            {{ b.natural_person_address.address }}
                         </td>
                         
                         <td class="font-mono">
-                            {{ b.party.cin }}
+                            {{ b.natural_person.cin }}
                         </td>
 
-                        <td>
-                            {{ b.party.address }}
-                        </td>
 
                         <td class="text-end">
                             {{ format.formatMontant(b.salary_amount) }}

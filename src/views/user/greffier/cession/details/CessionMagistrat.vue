@@ -3,15 +3,15 @@
     <div class="flex items-center justify-between">
         <h3 class="text-xl font-bold text-gray-700">Magistrat en charge de la cession</h3>
 
-        <VButton 
+        <VButton
+            v-if="props.cession.signed === 0"
             title="Réassigner"
             class="btn-cancel"
             @click="handleAssign"
         />
     </div>
 
-    <div
-        v-if="loading"
+    <div v-if="loading"
         class="flex flex-col items-center mt-12"
     >
         <v-skeleton-loader
@@ -91,6 +91,11 @@
 // Variables & state
     const route = useRoute();
     const router = useRouter();
+
+    const props = defineProps({
+        id: [String, Number],
+        cession: Object
+    });
 
     const magistrat = ref(null);
 

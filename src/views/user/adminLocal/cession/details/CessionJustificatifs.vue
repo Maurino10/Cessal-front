@@ -63,7 +63,7 @@
 // Imports
     import { computed, ref } from 'vue';
     import { useRoute } from 'vue-router';
-    import ministereService from '@/services/cessions/ministereService.js'
+    import adminLocalService from '@/services/cessions/adminLocalService.js'
 
 // Variables & state
 
@@ -71,7 +71,6 @@
 
     const props = defineProps(['justificatifs']);
     
-    console.log(props.justificatifs.length)
     const showAll = ref(false);
 // Functions
 
@@ -92,7 +91,7 @@
 
     const showAttachment = async (justif) => {
         try {
-            const response = await ministereService.showCessionJustificatif(justif.id_cession, justif.id);
+            const response = await adminLocalService.showCessionJustificatif(justif.id_cession, justif.id);
 
             const blob = response.data;
             const blobUrl = URL.createObjectURL(blob);

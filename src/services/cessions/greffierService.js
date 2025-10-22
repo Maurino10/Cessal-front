@@ -27,7 +27,7 @@ export default {
         return axios.get(`/greffier/${idUser}/cessions`);
     },
 
-    signCession(idCession) {
+    cessionIsSigned(idCession) {
         return axios.post(`/greffier/cessions/${idCession}/signed`);
     },
 
@@ -63,6 +63,10 @@ export default {
         return axios.put(`/greffier/cessions/${idCession}/lenders/${idCessionLender}`, lender);
     },
 
+    updateCessionLenderNewAddress (idCession, idCessionLender, lender) {
+        return axios.put(`/greffier/cessions/${idCession}/lenders/${idCessionLender}/new-address`, lender);
+    },
+
     deleteCessionLender (idCession, idCessionLender) {
         return axios.delete(`/greffier/cessions/${idCession}/lenders/${idCessionLender}`);
     },
@@ -87,6 +91,10 @@ export default {
 
     updateCessionBorrower (idCession, idCessionBorrower, borrower) {
         return axios.put(`/greffier/cessions/${idCession}/borrowers/${idCessionBorrower}`, borrower);
+    },
+
+    updateCessionBorrowerNewAddress (idCession, idCessionBorrower, borrower) {
+        return axios.put(`/greffier/cessions/${idCession}/borrowers/${idCessionBorrower}/new-address`, borrower);
     },
 
     deleteCessionBorrower (idCession, idCessionBorrower) {
@@ -155,11 +163,15 @@ export default {
 // --------------------------------------------- Person
 
     checkCIN (cin) {
-        return axios.get(`/cession-party/${cin}/check`);
+        return axios.get(`/cession-natural_person/${cin}/check`);
+    },
+
+    getAllAddressCessionNaturalPerson(idCessionNaturalPerson) {
+        return axios.get(`/cession-natural_person/${idCessionNaturalPerson}`);
     },
         
     getEntityByTPI (idTPI) {
-        return axios.get(`/cession-entity/tpi/${idTPI}`);
+        return axios.get(`/cession-legal_person/tpi/${idTPI}`);
     }
 
 // --------------------------------------------- Draft

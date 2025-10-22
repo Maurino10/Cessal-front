@@ -8,21 +8,21 @@
         <template #header_actions>
             <div class="flex p-1 mb-5 bg-gray-100 rounded-lg">
                 <button class="flex-grow px-4 py-3 text-gray-500 transition-all duration-300 ease-in border-none rounded-md" 
-                    :class="typeLender === 'person' ? 'active' : ''"
-                    @click="typeLender = 'person'"
+                    :class="typeLender === 'natural_person' ? 'active' : ''"
+                    @click="typeLender = 'natural_person'"
                 >
                     Personne
                 </button>
                 <button class="flex-grow px-4 py-3 text-gray-500 transition-all duration-300 ease-in border-none rounded-md"
-                    :class="typeLender === 'entity' ? 'active' : ''"
-                    @click="typeLender = 'entity'"
+                    :class="typeLender === 'legal_person' ? 'active' : ''"
+                    @click="typeLender = 'legal_person'"
                 >
                     Entité
                 </button>
             </div>
         </template>
         <template #card_text>
-            <div v-if="typeLender === 'person'">
+            <div v-if="typeLender === 'natural_person'">
                 <v-row>
                     <v-col class="!py-0">
                         <VOptInput label="CIN" :length="12"
@@ -61,7 +61,7 @@
                 
                 <v-row>
                     <v-col class="!py-0">
-                        <VCombobox v-if="cinExists" label="Adresse" placeholder="Entrer l'adresse du prêteur" :items="partyAddress" value="id" title="address"
+                        <VCombobox v-if="cinExists" label="Adresse" placeholder="Entrer l'adresse du prêteur" :items="naturalPersonAddresses" value="id" title="address"
                             v-model:model="form.address"
                             v-model:error="errors.address"
                         />
@@ -73,7 +73,6 @@
                     </v-col>
                 </v-row>
 
-
                 <v-row>
                     <v-col class="!py-0">
                         <span v-if="cinExists" class="p-2 text-emerald-500">CIN trouvé ✅</span>
@@ -84,7 +83,7 @@
             <div v-else>
                 <v-row>
                     <v-col class="!py-0">
-                        <VCombobox v-if="entities" label="Entités" placeholder="Entrer le prêteur" :items="entities" value="id" :title="formatEntityLabel"
+                        <VCombobox v-if="legalPersons" label="Entités" placeholder="Entrer le prêteur" :items="legalPersons" value="id" :title="formatEntityLabel"
                             v-model:model="form.name"
                             v-model:error="errors.name"
                         />
@@ -131,13 +130,13 @@
     const emit = defineEmits(['reload']);
 
     const genders = ref(null);
-    const entities = ref(null);
+    const legalPersons = ref(null);
 
-    const typeLender = ref('person');
+    const typeLender = ref('natural_person');
 
     const cinExists = ref(false);
-    const party = ref(null);
-    const partyAddress = ref(null);
+    const naturalPerson = ref(null);
+    const naturalPersonAddresses = ref(null);
     
     let debounceTimer = null;
      
@@ -145,7 +144,7 @@
     const { openLoader } = useLoader();
 
     const form = reactive({
-        type: 'person',
+        type: 'natural_person',
         last_name: null,
         first_name: null,
         cin: null,
@@ -168,10 +167,10 @@
 // 🔸 Pour vider les champs non utilisés selon le type sélectionné
 
 // Functions
-    const formatEntityLabel = (entity) => {
-        if (typeof entity === 'string') return entity; // ⚠️ Permet de taper librement !
-        return entity && entity.name
-            ? `${entity.name} — ${entity.address || 'Adresse inconnue'}`
+    const formatEntityLabel = (legalPerson) => {
+        if (typeof legalPerson === 'string') return legalPerson; // ⚠️ Permet de taper librement !
+        return legalPerson && legalPerson.name
+            ? `${legalPerson.name} — ${legalPerson.address || 'Adresse inconnue'}`
             : '';
     };
     
@@ -181,7 +180,7 @@
 
     watch(typeLender, (newType) => {
         form.type = newType
-        if (newType === 'person') {
+        if (newType === 'natural_person') {
             form.name = null
             form.address = null
         } else {
@@ -215,12 +214,12 @@
             const response = await greffierService.checkCIN($cin);
 
             if (response.data.exists) {
-                party.value = response.data.party;
-                partyAddress.value = party.value.address;
-                form.last_name = party.value.last_name;
-                form.first_name = party.value.first_name;
-                form.address = party.value.address[0];
-                form.gender = party.value.id_gender;
+                naturalPerson.value = response.data.natural_person;
+                naturalPersonAddresses.value = naturalPerson.value.address;
+                form.last_name = naturalPerson.value.last_name;
+                form.first_name = naturalPerson.value.first_name;
+                form.address = null;
+                form.gender = naturalPerson.value.id_gender;
                 cinExists.value = true;
             } else {
                 cinExists.value = false;
@@ -242,12 +241,12 @@
         try {
             form.type = typeLender.value;
 
-
-
-            if (typeLender.value === 'entity') {
+            if (typeLender.value === 'legal_person') {
 
                 if (typeof form.name === 'object' && form.name !== null) {
-                    const response = await greffierService.createCessionLenderEntityExists(props.idCession, { party: form.name.id });
+                    const response = await greffierService.createCessionLenderEntityExists(props.idCession, { 
+                        natural_person: form.name.id,
+                    });
                     
                 } else {
                     const profil = JSON.parse(localStorage.getItem('profil'));
@@ -259,11 +258,18 @@
             } else {
                 if (cinExists.value === true) {
                     if (typeof form.address === 'object' && form.address !== null) {
-                        const response = await greffierService.createCessionLenderExists(props.idCession, { party: party.value.id });
+                        const response = await greffierService.createCessionLenderExists(props.idCession, { 
+                            natural_person: naturalPerson.value.id,
+                            natural_person_address: form.address.id
+                        });
                     } else {
-                        const response = await greffierService.createCessionLenderExistsNewAddress(props.idCession, { party: party.value.id, address: form.address });
+                        const response = await greffierService.createCessionLenderExistsNewAddress(props.idCession, { 
+                            natural_person: naturalPerson.value.id, 
+                            address: form.address 
+                        });
                     }
                 } else {
+                    console.log("Ato");
                     const response = await greffierService.createCessionLender(props.idCession, form);
                 }
             }
@@ -300,7 +306,7 @@
             const profil = JSON.parse(localStorage.getItem('profil'));
 
             const response = await greffierService.getEntityByTPI(profil.user.tpi.id);
-            entities.value = response.data.entities;
+            legalPersons.value = response.data.legal_persons;
         } catch (error) {
             console.error(error.response.data);
         }

@@ -13,6 +13,7 @@
         single-line
         hide-no-data
         clearable
+        autocomplete="off"
         :error-messages="modelError ? [modelError] : []"
         @update:model-value="modelError = null"
         :disabled="disabled"

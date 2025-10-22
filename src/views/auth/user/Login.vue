@@ -135,8 +135,8 @@
                 case 'magistrat':
                     router.push('/magistrat/accueil');
                     break;
-                case 'ministere':
-                    router.push('/ministere/accueil');
+                case 'admin_local':
+                    router.push('/administrateur/local/accueil');
                     break;
                 default:
                     router.push('/login');

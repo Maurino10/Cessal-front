@@ -32,8 +32,8 @@ function getDashboardPath(role) {
       return '/greffier/accueil';
     case 'magistrat':
       return '/magistrat/accueil';
-    case 'ministere':
-      return '/ministere/dashboard';
+    case 'admin_local':
+      return '/administrateur/local/accueil';
     default:
       return '/login';
   }

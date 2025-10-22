@@ -38,7 +38,7 @@
             </v-row>
             <v-row>
                 <v-col class="!py-0">
-                    <VInput label="Adresse" placeholder="Entrer l'adresse du prêteur" type="text"
+                    <VCombobox v-if="naturalPersonAddress" label="Adresse" placeholder="Entrer l'adresse d'emprunteur" :items="naturalPersonAddress" value="id" title="address"
                         v-model:model="form.address"
                         v-model:error="errors.address"
                     />
@@ -74,6 +74,7 @@
     import { onMounted, reactive, ref } from 'vue';
     import VCardForm from '@/components/VCardForm.vue';
     import VInput from '@/components/VInput.vue';
+    import VCombobox from '@/components/VCombobox.vue';
     import VSelect from '@/components/VSelect.vue';
     import VOptInput from '@/components/VOptInput.vue';
     import VTextArea from '@/components/VTextArea.vue';
@@ -83,6 +84,7 @@
     import genderService from '@/services/users/genderService';
     import { useSnackbar } from "@/composables/useSnackbar";
     import { useLoader } from "@/composables/useLoader";
+import { ca } from 'vuetify/locale';
 
 // Variables & state
 
@@ -92,6 +94,7 @@
     const emit = defineEmits(['reload']);
 
     const genders = ref(null);
+    const naturalPersonAddress = ref(null);
 
     const { openSnackbar } = useSnackbar();
     const { openLoader } = useLoader();
@@ -103,7 +106,8 @@
         address: null,
         salary_amount: null,
         remark: null,
-        gender: null
+        gender: null,
+        new_address: false
     });
     
     const errors = reactive({
@@ -125,8 +129,17 @@
         openLoader(true);
 
         try {
-            
-            const response = await greffierService.updateCessionBorrower(props.borrower.id_cession, props.borrower.id, form);
+            if (typeof form.address === 'object' && form.address !== null) {
+                form.new_address = false;
+                
+                const data = { ...form, address: form.address.id };
+
+                const response = await greffierService.updateCessionBorrower(props.borrower.id_cession, props.borrower.id, data);
+            } else {
+                form.new_address = true;
+
+                const response = await greffierService.updateCessionBorrowerNewAddress(props.borrower.id_cession, props.borrower.id, form);
+            }
             
             setTimeout(() => {
                 emit('reload');
@@ -152,16 +165,29 @@
             console.error(error.response.data);
         }
     };
+
+    const fetchAllAddressCessionNaturalPerson = async () => {
+        try {
+            const response = await greffierService.getAllAddressCessionNaturalPerson(props.borrower.natural_person.id);
+            naturalPersonAddress.value = response.data.addresses;
+            
+        } catch (error) {
+            console.error(error.response.data);
+        }
+    }
 // Lifecycle hooks
 
     onMounted (async () => {
 
-        await fetchAllGender();
-        form.last_name = props.borrower.party.last_name;
-        form.first_name = props.borrower.party.first_name;
-        form.cin = props.borrower.party.cin;
-        form.address = props.borrower.party.address;
-        form.gender = props.borrower.party.id_gender;
+        await Promise.all([
+            fetchAllGender(),
+            fetchAllAddressCessionNaturalPerson()
+        ]);    
+        form.last_name = props.borrower.natural_person.last_name;
+        form.first_name = props.borrower.natural_person.first_name;
+        form.cin = props.borrower.natural_person.cin;
+        form.address = props.borrower.natural_person_address;
+        form.gender = props.borrower.natural_person.id_gender;
         form.salary_amount = props.borrower.salary_amount;
         form.remark = props.borrower.remark;
     });

@@ -1,9 +1,10 @@
 <template>
 
     <VBreadCrumb 
+        v-if="cession"
         :items="[
             {title: 'cessions', disabled: true},
-            {title: `${route.params.id}`, disabled: false},
+            {title: `${cession.numero_dossier}`, disabled: false},
         ]" 
     />
 
@@ -20,14 +21,14 @@
                 </v-chip>
             </template>
 
-            <!-- <template #actions>
+            <template #actions>
                  <VButton
-                    v-if="cession.status_cession != 4"
+                    v-if="cession.signed === 0 && cession.status_cession > 0"
                     title="Signée"
                     class="btn-submit"
                     @click="cessionSigned"
                 />
-            </template> -->
+            </template>
         </VMainHeader>
     
         <div class="mt-6">
@@ -44,7 +45,7 @@
         </div>
     
         <div v-if="cession" class="mt-8">
-            <router-view></router-view>
+            <router-view :cession="cession"></router-view>
         </div>
     </div>
 
@@ -79,7 +80,7 @@
 
     const cessionSigned = async () => {
         try {
-            const response = await greffierService.signCession(route.params.id);
+            const response = await greffierService.cessionIsSigned(route.params.id);
 
             await fetchCession();
         } catch (error) {

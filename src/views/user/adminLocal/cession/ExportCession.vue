@@ -45,7 +45,7 @@
 <script setup>
 
     import VButton from '@/components/VButton.vue';
-    import ministereService from '@/services/cessions/ministereService';
+    import adminLocalService from '@/services/cessions/adminLocalService';
 
     const props = defineProps(['statut', 'dateStart', 'dateEnd']);
 
@@ -54,7 +54,7 @@
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await ministereService.exportExcelCessionsByTPI(
+            const response = await adminLocalService.exportExcelCessionsByTPI(
                 profil.user.id_tpi, 
                 props.statut, 
                 props.dateStart, 
@@ -83,7 +83,7 @@
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await ministereService.exportPdfCessionsByTPI(
+            const response = await adminLocalService.exportPdfCessionsByTPI(
                 profil.user.id_tpi, 
                 props.statut, 
                 props.dateStart, 

@@ -41,6 +41,7 @@
                             base-color="#9ca3af"
                             color="#10b981"
                             hide-details
+                            autocomplete="off"
                             clearable
                         >
                             <template v-slot:prepend-inner>
@@ -67,6 +68,7 @@
                             :error-messages="errorMessage"
                             @update:model-value="validateDates"
                             clearable
+                            autocomplete="off"
                         >
                             <template v-slot:prepend-inner>
                                 <v-icon
@@ -100,7 +102,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { ref } from 'vue';
     import { VDateInput } from 'vuetify/labs/VDateInput'
     import VButton from '@/components/VButton.vue';
     
@@ -159,11 +161,4 @@
         dateEnd.value = null;
     }
 
-    // const getFirstAndLastDateInCurrentMonth = () => {
-    //     var date = new Date();
-    //     dateStart.value = new Date(date.getFullYear(), date.getMonth(), 1);
-    //     dateEnd.value = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    // }
-
-    // onMounted(() => getFirstAndLastDateInCurrentMonth());
 </script>

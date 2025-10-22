@@ -12,7 +12,7 @@
     <div v-if="borrower">
         <VMainHeader 
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
-            :title="borrower.party.last_name+' '+borrower.party.first_name" 
+            :title="borrower.natural_person.last_name+' '+borrower.natural_person.first_name" 
             subtitle="Emprunteur" 
         >
         </VMainHeader>
@@ -23,21 +23,21 @@
 
                     <h1 class="mb-5 text-xl text-center text-gray-800">Informations d'emprunteur</h1>
                     
-                    <div class="py-2 text-base border-b">
-                        <h4 class="text-gray-400">Nom</h4>
-                        <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.party.last_name }}</p>
+                    <div class="py-2 border-b">
+                        <h4 class="text-base text-gray-400">Nom</h4>
+                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person.last_name }}</p>
                     </div>
-                    <div class="py-2 text-base border-b">
-                        <h4 class="text-gray-400">Prénom</h4>
-                        <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.party.first_name }}</p>
+                    <div class="py-2 border-b">
+                        <h4 class="text-base text-gray-400">Prénom</h4>
+                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person.first_name }}</p>
                     </div>
-                    <div class="py-2 text-base border-b">
-                        <h4 class="text-gray-400">CIN</h4>
-                        <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.party.cin }}</p>
+                    <div class="py-2 border-b">
+                        <h4 class="text-base text-gray-400">CIN</h4>
+                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person.cin }}</p>
                     </div>
                     <div class="py-2 text-base">
-                        <h4 class="text-gray-400">Adresse</h4>
-                        <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.party.address }}</p>
+                        <h4 class="text-base text-gray-400">Adresse</h4>
+                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person_address.address }}</p>
                     </div>
                 </div>
             </v-col>
@@ -47,25 +47,25 @@
 
                     <h1 class="mb-5 text-xl text-center text-gray-800">Détails financiers</h1>
                     
-                    <div class="py-2 text-base border-b">
-                        <h4 class="text-gray-400">Montant revenu</h4>
-                        <p class="text-lg font-bold tracking-wide text-emerald-500">{{ format.formatMontant(borrower.salary_amount) }}</p>
+                    <div class="py-2 border-b">
+                        <h4 class="text-base text-gray-400">Montant revenu</h4>
+                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ format.formatMontant(borrower.salary_amount) }}</p>
                     </div>
-                    <div class="py-2 text-base border-b">
-                        <h4 class="text-gray-400">Montant accordé</h4>
-                        <p v-if="borrower.quota" class="text-lg font-bold tracking-wide text-emerald-500">
+                    <div class="py-2 border-b">
+                        <h4 class="text-base text-gray-400">Montant accordé</h4>
+                        <p v-if="borrower.quota" class="text-base font-bold tracking-wide text-emerald-500">
                             {{ format.formatMontant(borrower.quota.granted_amount) }}
                         </p>
-                        <p v-else class="text-lg tracking-wide text-amber-500">
+                        <p v-else class="text-base tracking-wide text-amber-500">
                             En attente
                         </p>
                     </div>
                     <div class="py-2 text-base">
-                        <h4 class="text-gray-400">Pourcentage</h4>
-                        <p v-if="borrower.quota" class="text-lg font-bold tracking-wide text-emerald-500">
-                            {{ format.formatMontant(borrower.quota.percentage) }} %
+                        <h4 class="text-base text-gray-400">Pourcentage</h4>
+                        <p v-if="borrower.quota" class="text-base font-bold tracking-wide text-emerald-500">
+                            {{ borrower.quota.percentage }} %
                         </p>
-                        <p v-else class="text-lg tracking-wide text-amber-500">
+                        <p v-else class="text-base tracking-wide text-amber-500">
                             En attente
                         </p>
                     </div>
@@ -78,21 +78,21 @@
                     <h1 class="mb-5 text-xl text-center text-gray-800">Références d’enregistrement</h1>
 
                     <div v-if="borrower.reference !== null">
-                        <div class="py-2 text-base border-b">
-                            <h4 class="text-gray-400">Reçu nº</h4>
-                            <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_recu }}</p>
+                        <div class="py-2 border-b">
+                            <h4 class="text-base text-gray-400">Reçu nº</h4>
+                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_recu }}</p>
                         </div>
-                        <div class="py-2 text-base border-b">
-                            <h4 class="text-gray-400">Feuillet nº</h4>
-                            <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_feuillet }}</p>
+                        <div class="py-2 border-b">
+                            <h4 class="text-base text-gray-400">Feuillet nº</h4>
+                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_feuillet }}</p>
                         </div>
-                        <div class="py-2 text-base border-b">
-                            <h4 class="text-gray-400">Répertoire nº</h4>
-                            <p class="text-lg font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_repertoire }}</p>
+                        <div class="py-2 border-b">
+                            <h4 class="text-base text-gray-400">Répertoire nº</h4>
+                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_repertoire }}</p>
                         </div>
                         <div class="py-2 text-base">
-                            <h4 class="text-gray-400">Du</h4>
-                            <p class="text-lg font-bold tracking-wide text-emerald-500">{{ format.formatDate(borrower.reference.date) }}</p>
+                            <h4 class="text-base text-gray-400">Du</h4>
+                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ format.formatDate(borrower.reference.date) }}</p>
                         </div>
     
                         <div class="flex gap-4 mt-8">

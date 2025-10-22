@@ -22,7 +22,7 @@
             <template #tbody>
                 <tr v-for="(d, index) in props.borrowers" :key="index">
                     <td class="font-bold !w-80">
-                        {{ d.party.last_name }} {{ d.party.first_name }}
+                        {{ d.natural_person.last_name }} {{ d.natural_person.first_name }}
                     </td>
                     
                     <td>

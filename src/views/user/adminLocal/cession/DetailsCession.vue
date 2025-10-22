@@ -1,15 +1,14 @@
 <template>
 
-    <VBreadCrumb 
+   <VBreadCrumb v-if="cession"
         :items="[
             {title: 'cessions', disabled: true},
-            {title: `${route.params.id}`, disabled: false},
+            {title: `${cession.numero_dossier}`, disabled: false},
         ]" 
     />
 
     <div class="main-body">
-        <VMainHeader 
-            v-if="cession"
+        <VMainHeader v-if="cession"
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
             :title="cession.numero_dossier" 
             subtitle="Numéro du dossier" 
@@ -58,7 +57,6 @@
                     <v-col>
                         <CessionBorrower 
                             :borrowers="borrowers"
-                            @reload="fetchCessionBorrowers"
                         />
                     </v-col>
                 </v-row>
@@ -67,7 +65,6 @@
             <v-col cols="12" md="4">
                 <CessionInfo 
                     :cession="cession" 
-                    @reload="fetchCession" 
                 />
             </v-col>
         </v-row>
@@ -81,7 +78,7 @@
     import { useRoute } from 'vue-router';
     import VMainHeader from '@/components/VMainHeader.vue';
     import VBreadCrumb from '@/components/VBreadCrumb.vue';
-    import ministereService from '@/services/cessions/ministereService';
+    import adminLocalService from '@/services/cessions/adminLocalService';
     import CessionInfo from './details/CessionInfo.vue';
     import CessionBorrower from './details/CessionBorrower.vue';
     import CessionLender from './details/CessionLender.vue';
@@ -102,7 +99,7 @@
 
     const fetchCession = async () => {
         try {
-            const response = await ministereService.getCession(route.params.id);
+            const response = await adminLocalService.getCession(route.params.id);
             cession.value = response.data.cession;
 
         } catch (error) {
@@ -112,7 +109,7 @@
 
     const fetchCessionBorrowers = async () => {
         try {
-            const response = await ministereService.getAllCessionBorrowerByCession(route.params.id);
+            const response = await adminLocalService.getAllCessionBorrowerByCession(route.params.id);
             borrowers.value = response.data.borrowers;
 
         } catch (error) {
@@ -122,7 +119,7 @@
 
     const fetchCessionJustificatifs = async () => {
         try {
-            const response = await ministereService.getAllCessionJustificatifByCession(route.params.id);
+            const response = await adminLocalService.getAllCessionJustificatifByCession(route.params.id);
             justificatifs.value = response.data.justifs;
             
         } catch (error) {
@@ -132,7 +129,7 @@
 
     const fetchCessionLenders = async () => {
         try {
-            const response = await ministereService.getAllCessionLenderByCession(route.params.id);
+            const response = await adminLocalService.getAllCessionLenderByCession(route.params.id);
             lenders.value = response.data.lenders;
         } catch (error) {
             

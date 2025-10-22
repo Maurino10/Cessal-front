@@ -3,7 +3,7 @@ import authRoutes from './routes/auth'
 import adminRoutes from './routes/admin'
 import greffierRoutes from './routes/greffier'
 import magistratRoutes from './routes/magistrat'
-import ministereRoutes from './routes/ministere'
+import adminLocalRoutes from './routes/adminLocal'
 import { authGuard, roleGuard } from './guards'
 
 
@@ -14,7 +14,7 @@ const router = createRouter({
     ...adminRoutes,
     ...greffierRoutes,
     ...magistratRoutes,
-    ...ministereRoutes,
+    ...adminLocalRoutes,
   ], // par défaut uniquement auth
 })
 

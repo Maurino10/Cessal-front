@@ -29,7 +29,7 @@
                     />
                 </v-col>
                 <v-col class="!py-0">
-                    <VInputDate label="Du " placeholder="date"
+                    <VInputDate label="Du"
                         v-model:model="form.date"
                         v-model:error="errors.date"
                     />

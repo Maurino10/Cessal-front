@@ -4,6 +4,7 @@
         <h3 class="text-xl font-bold text-gray-700">Liste des prêteurs</h3>
         
         <VButton
+            v-if="props.cession.signed === 0"
             title="Ajouter Prêteur" 
             icon="mdi-plus"
             class="btn-cancel"
@@ -11,8 +12,7 @@
         />
     </div>
 
-    <v-skeleton-loader
-      v-if="loading"
+    <v-skeleton-loader v-if="loading"
       type="table-tbody"
       class="mt-4"
     />
@@ -30,51 +30,53 @@
                     <th># Prêteur</th>
                     <th>Adresse</th>
                     <th>CIN</th>
-                    <th class="text-center">Actions</th>
+                    <th v-if="props.cession.signed === 0" class="text-center">Actions</th>
                 </tr>
             </template>
             
             <template #tbody>
                 <tr v-for="(p, index) in lenders" :key="index">
-                    <template v-if="p.type === 'person'">
+                    <template v-if="p.type === 'natural_person'">
                         <td class="font-bold">
-                            {{ p.party?.last_name }}
-                            {{ p.party?.first_name }}
-                        </td>
-    
-                        <td class="font-mono">
-                            {{ p.party?.cin }}
+                            {{ p.natural_person?.last_name }}
+                            {{ p.natural_person?.first_name }}
                         </td>
     
                         <td>
-                            {{ p.party?.address }}
+                            {{ p.natural_person_address?.address }}
                         </td>
                         
-                        <td class="text-center">
+                        <td class="font-mono">
+                            {{ p.natural_person?.cin }}
+                        </td>
+    
+                        
+                        <td v-if="props.cession.signed === 0" class="text-center">
                             <VTableAction 
                                 :actions="actions" 
-                                :title="p.party?.first_name"
+                                :title="p.natural_person?.first_name"
                                 :objet="p"
                                 @action="handleAction"
                             /> 
                         </td>
                     </template>
+                    
                     <template v-else>
                         <td class="font-bold">
-                            {{ p.entity?.name }}
+                            {{ p.legal_person?.name }}
                         </td>
     
                         <td>
-                            {{ p.entity?.address }}
+                            {{ p.legal_person?.address }}
                         </td>
                         
                         <td>
                         </td>
                         
-                        <td class="text-center">
+                        <td v-if="props.cession.signed === 0" class="text-center">
                             <VTableAction 
-                                :actions="actions" 
-                                :title="p.entity?.name"
+                                :actions="[actions[1]]" 
+                                :title="p.legal_person?.name"
                                 :objet="p"
                                 @action="handleAction"
                             /> 
@@ -145,7 +147,12 @@
 
 // Variables & state
     const route = useRoute();
-    
+
+    const props = defineProps({
+        id: [String, Number],
+        cession: Object
+    });
+        
     const lenders = ref(null);
 
     const overlay = ref(false);
@@ -175,12 +182,15 @@
         try {
             const response = await greffierService.getAllCessionLenderByCession(route.params.id);
             lenders.value = response.data.lenders;
+
         } catch (error) {
             
         }
     }
 // Lifecycle hooks
     onMounted(async () => {
+
+        console.log(props.cession);
         loading.value = true;
         
         await fetchCessionLenders();

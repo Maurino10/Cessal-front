@@ -44,7 +44,7 @@
 
             <v-row>
                 <v-col class="!py-0">
-                    <VCombobox v-if="cinExists" label="Adresse" placeholder="Entrer l'adresse du prêteur" :items="partyAddress" value="id" title="address"
+                    <VCombobox v-if="cinExists" label="Adresse" placeholder="Entrer l'adresse du prêteur" :items="naturalPersonAddress" value="id" title="address"
                         v-model:model="form.address"
                         v-model:error="errors.address"
                     />
@@ -114,8 +114,8 @@ import { watch } from 'vue';
     const genders = ref(null);
 
     const cinExists = ref(false);
-    const party = ref(null);
-    const partyAddress = ref(null);
+    const naturalPerson = ref(null);
+    const naturalPersonAddress = ref(null);
 
     let debounceTimer = null;
 
@@ -161,12 +161,12 @@ import { watch } from 'vue';
             const response = await greffierService.checkCIN($cin);
 
             if (response.data.exists) {
-                party.value = response.data.party;
-                partyAddress.value = party.value.address;
-                form.last_name = party.value.last_name;
-                form.first_name = party.value.first_name;
-                form.address = party.value.address[0];
-                form.gender = party.value.id_gender;
+                naturalPerson.value = response.data.natural_person;
+                naturalPersonAddress.value = naturalPerson.value.address;
+                form.last_name = naturalPerson.value.last_name;
+                form.first_name = naturalPerson.value.first_name;
+                form.address = null;
+                form.gender = naturalPerson.value.id_gender;
                 cinExists.value = true;
             } else {
                 cinExists.value = false;
@@ -189,14 +189,16 @@ import { watch } from 'vue';
 
             if (cinExists.value === true) {
                 if (typeof form.address === 'object' && form.address !== null) {
+                    console.log(form.address);
                     const response = await greffierService.createCessionBorrowerExists(props.idCession, { 
-                        party: party.value.id,
+                        natural_person: naturalPerson.value.id,
+                        natural_person_address: form.address.id,
                         salary_amount: form.salary_amount,
                         remark: form.remark,
                     });
                 } else {
                     const response = await greffierService.createCessionBorrowerExistsNewAddress(props.idCession, { 
-                        party: party.value.id,
+                        natural_person: naturalPerson.value.id,
                         address: form.address,
                         salary_amount: form.salary_amount,
                         remark: form.remark,

@@ -9,13 +9,15 @@
         :item-title="props.title"
         density="compact" 
         variant="outlined" 
-        base-color="grey"  
+        base-color="grey" 
         allow-new
         new-value-mode="add" 
         single-line
         hide-no-data
         hide-selected
         clearable
+        menu-icon="false"
+        autocomplete="off"
         :error-messages="modelError ? [modelError] : []"
         @update:model-value="modelError = null"
         :disabled="disabled"
