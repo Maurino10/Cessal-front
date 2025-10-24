@@ -61,6 +61,7 @@
     import VTextArea from '@/components/VTextArea.vue';
     import greffierService from '@/services/cessions/greffierService';
     import formErrorUtils from '@/utils/formErrorUtils';
+    import format from '@/utils/format';
     import { useSnackbar } from "@/composables/useSnackbar";
     import { useLoader } from "@/composables/useLoader";
 
@@ -100,8 +101,14 @@
         openLoader(true);
 
         try {
+
+            const data = { 
+                ...form, 
+                date_cession: format.convertDate(form.date_cession), 
+                date_contrat: format.convertDate(form.date_contrat)
+            }
             
-            const response = await greffierService.updateCession(props.cession.id, form);
+            const response = await greffierService.updateCession(props.cession.id, data);
             
             setTimeout(() => {
                 emit('reload');

@@ -29,7 +29,7 @@
                     />
                 </v-col>
                 <v-col class="!py-0">
-                    <VInputDate label="Du " placeholder="date"
+                    <VInputDate label="Du "
                         v-model:model="form.date"
                         v-model:error="errors.date"
                     />
@@ -39,7 +39,7 @@
         
         <template #card_actions>
             <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Modifier" class="btn-submit" @click="addReferenceBorrower" />
+            <VButton title="Modifier" class="btn-submit" @click="editReferenceBorrower" />
         </template>
     </VCardForm>
 </template>
@@ -53,9 +53,10 @@
     import VButton from '@/components/VButton.vue';
     import greffierService from '@/services/cessions/greffierService';
     import formErrorUtils from "@/utils/formErrorUtils";
+    import format from "@/utils/format";
     import { useSnackbar } from "@/composables/useSnackbar";
     import { useLoader } from "@/composables/useLoader";
-import { useRoute } from 'vue-router';
+    import { useRoute } from 'vue-router';
 
 // Variables & state
     const route = useRoute();
@@ -88,15 +89,20 @@ import { useRoute } from 'vue-router';
         model.value = !model.value
     }
 
-    const addReferenceBorrower = async () => {
+    const editReferenceBorrower = async () => {
         openLoader(true);
 
         try {
+            const data = {
+                ...form,
+                date: format.convertDate(form.date)
+            }
+                        
             const response = await greffierService.updateCessionReference(
                 route.params.id,
                 props.borrower.id,
                 props.reference.id,
-                form
+                data
             );
 
             

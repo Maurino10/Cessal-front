@@ -34,6 +34,8 @@ function getDashboardPath(role) {
       return '/magistrat/accueil';
     case 'admin_local':
       return '/administrateur/local/accueil';
+    case 'ministere':
+      return '/ministere/accueil';
     default:
       return '/login';
   }

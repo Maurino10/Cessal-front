@@ -53,6 +53,7 @@
     import VButton from '@/components/VButton.vue';
     import greffierService from '@/services/cessions/greffierService';
     import formErrorUtils from "@/utils/formErrorUtils";
+    import format from "@/utils/format";
     import { useSnackbar } from "@/composables/useSnackbar";
     import { useLoader } from "@/composables/useLoader";
 import { useRoute } from 'vue-router';
@@ -92,10 +93,16 @@ import { useRoute } from 'vue-router';
         openLoader(true);
 
         try {
+
+            const data = {
+                ...form,
+                date: format.convertDate(form.date)
+            }
+            
             const response = await greffierService.storeCessionReference(
                 route.params.id,
                 props.borrower.id,
-                form
+                data
             );
 
             

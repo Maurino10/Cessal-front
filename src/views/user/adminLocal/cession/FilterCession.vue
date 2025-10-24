@@ -105,6 +105,7 @@
     import { ref } from 'vue';
     import { VDateInput } from 'vuetify/labs/VDateInput'
     import VButton from '@/components/VButton.vue';
+    import format from '@/utils/format';
     
     const emit = defineEmits(['filter']);
 
@@ -121,9 +122,8 @@
         {id: 1, name: 'En cours de traitement'},
         {id: 2, name: 'Acceptée'},
         {id: 3, name: 'Refusée'},
-        {id: 4, name: 'Signée'},
-        {id: 5, name: 'Clôturée'},
-        {id: 6, name: 'En cours d\'exécution'},
+        {id: 4, name: 'Clôturée'},
+        {id: 5, name: 'En cours d\'exécution'},
     ];
 
     const validateDates =  () => {
@@ -132,11 +132,12 @@
             return true;
         }
 
-        const start = dateStart.value ? new Date(dateStart.value).toISOString().split("T")[0] : null;
-        const end = dateEnd.value ? new Date(dateEnd.value).toISOString().split("T")[0] : null;
-
+        const start = dateStart.value ? new Date(dateStart.value) : null;
+        const end = dateEnd.value ? new Date(dateEnd.value): null;
+        
         if (start > end) {
             errorMessage.value = 'La date de fin ne peut pas être antérieure à la date de début';
+            dateEnd.value = null;
             return false;
         }
 
@@ -147,9 +148,9 @@
     const filter = () => {
     
         if (validateDates()) {
-            
-            const start = dateStart.value ? new Date(dateStart.value).toISOString().split("T")[0] : null;
-            const end = dateEnd.value ? new Date(dateEnd.value).toISOString().split("T")[0] : null;
+            const start = dateStart.value ? format.convertDate(dateStart.value) : null;            
+            const end = dateEnd.value ? format.convertDate(dateEnd.value) : null;
+
             emit('filter', statut.value, start, end);
             menu.value = false;
         }

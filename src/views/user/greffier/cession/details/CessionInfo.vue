@@ -5,12 +5,12 @@
       class="mt-4"
     />
 
-    <div v-else-if="cession !== null">
+    <div v-else-if="cessionInfos !== null">
         <div class="flex items-center justify-between">
             <h3 class="text-xl font-bold text-gray-700">Informations Générales</h3>
             
             <VButton 
-                v-if="cession.signed === 0"
+                v-if="cessionInfos.signed === 0"
                 title="Modifier"
                 icon="mdi-pencil"
                 class="btn-cancel"
@@ -18,7 +18,7 @@
             />
         </div>
         
-        <div v-if="cession" class="mt-6 rounded-lg">
+        <div v-if="cessionInfos" class="mt-6 rounded-lg">
             <v-row>
                 <v-col cols="12" md="6">
                     <div class="flex flex-col gap-3 px-6 py-5 rounded-lg bg-light_gray custom-border">
@@ -26,7 +26,7 @@
                             Numéro du dossier
                         </p>
                         <h4 class="text-lg">
-                            {{ cession.numero_dossier }}
+                            {{ cessionInfos.numero_dossier }}
                         </h4>
                     </div>
                 </v-col>
@@ -37,7 +37,7 @@
                             Numéro d'ordonnance
                         </p>
                         <h4 class="text-lg text-white">
-                            {{ cession.ordonnance?.numero_ordonnance || 'En attente'}}
+                            {{ cessionInfos.ordonnance?.numero_ordonnance || 'En attente'}}
                         </h4>
                     </div>
                 </v-col>
@@ -50,7 +50,7 @@
                             Date du contrat
                         </p>
                         <h4 class="text-lg">
-                            {{ format.formatDate(cession.date_contrat) }}
+                            {{ format.formatDate(cessionInfos.date_contrat) }}
                         </h4>
                     </div>
                 </v-col>
@@ -61,7 +61,7 @@
                             Date de cession
                         </p>
                         <h4 class="text-lg">
-                            {{ format.formatDate(cession.date_cession) }}
+                            {{ format.formatDate(cessionInfos.date_cession) }}
                         </h4>
                     </div>
                 </v-col>
@@ -72,7 +72,7 @@
                             Montant à remboursé
                         </p>
                         <h4 class="text-lg">
-                            {{ format.formatMontant(cession.reimbursed_amount) }}
+                            {{ format.formatMontant(cessionInfos.reimbursed_amount) }}
                         </h4>
                     </div>
                 </v-col>
@@ -85,7 +85,7 @@
                             Objet de la demande
                         </p>
                         <h4 class="text-lg">
-                            {{ cession.request_subject }} 
+                            {{ cessionInfos.request_subject }} 
                         </h4>
                     </div>
                 </v-col>
@@ -96,7 +96,7 @@
     <v-overlay v-model="overlay" class="flex items-center justify-center">
         <EditCession 
             v-model="overlay" 
-            :cession="cession" 
+            :cession="cessionInfos" 
             @reload="fetchCessionInfos"
         />
     </v-overlay>
@@ -112,8 +112,13 @@
     import { useRoute } from 'vue-router';
 // Variables & state
     const route = useRoute();
+
+    const props = defineProps({
+        id: [String, Number],
+        cession: Object
+    });
     
-    const cession = ref(null);
+    const cessionInfos = ref(null);
 
     const overlay = ref(false);
 
@@ -123,7 +128,7 @@
     const fetchCessionInfos = async () => {
         try {
             const response = await greffierService.getCession(route.params.id);
-            cession.value = response.data.cession;
+            cessionInfos.value = response.data.cession;
         } catch (error) {
             
         }

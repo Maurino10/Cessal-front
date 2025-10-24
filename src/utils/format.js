@@ -14,12 +14,17 @@ export default {
   formatDate (datetimeString) {
     return dayjs(datetimeString).format('DD/MM/YYYY') // => "07 Aug 2025"
   },
-  
-  relativeTime (date) {
-      return dayjs(date).fromNow()
+
+  convertDate (dateStr) {
+    const d = new Date(dateStr);
+    return`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
   },
 
-   formatMontant (montant) {
+  relativeTime (date) {
+    return dayjs(date).fromNow()
+  },
+
+  formatMontant (montant) {
     return new Intl.NumberFormat('fr-MG', {
       style: 'currency',
       currency: 'MGA'

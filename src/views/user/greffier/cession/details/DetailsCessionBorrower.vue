@@ -1,15 +1,16 @@
 <template>
 
-    <VBreadCrumb 
+    <VBreadCrumb
+        v-if="cession"
         :items="[
             {title: 'cessions', disabled: true},
-            {title: `${route.params.id}`, disabled: true},
+            {title: `${cession.numero_dossier}`, disabled: true},
             {title: 'emprunteurs', disabled: true},
             {title: 'détails', disabled: false},
         ]" 
     />
 
-    <div v-if="borrower">
+    <div v-if="borrower && cession">
         <VMainHeader 
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
             :title="borrower.natural_person.last_name+' '+borrower.natural_person.first_name" 
@@ -97,6 +98,7 @@
     
                         <div class="flex gap-4 mt-8">
                              <VButton
+                                v-if="cession.signed === 0"
                                 title="Modifier"
                                 class="flex-grow btn-cancel"
                                 @click="handleEdit(borrower.reference)"
@@ -182,6 +184,7 @@ import { useRoute } from 'vue-router';
 
     const route = useRoute();
     
+    const cession = ref(null);
     const borrower = ref(null);
 
     const overlay = ref(false);
@@ -229,8 +232,20 @@ import { useRoute } from 'vue-router';
             console.log(error)
         }
     }
+
+    const fetchCession = async () => {
+        try {
+            const response = await greffierService.getCession(route.params.id);
+            cession.value = response.data.cession;
+        } catch (error) {
+            
+        }
+    }
 // Lifecycle hooks 
     onMounted(async () => {
-        await fetchCessionBorrower();
+        await Promise.all([
+            fetchCessionBorrower(),
+            fetchCession()
+        ]); 
     })
 </script>

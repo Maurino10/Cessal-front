@@ -69,6 +69,7 @@
     import formErrorUtils from "@/utils/formErrorUtils";
     import greffierService from '@/services/cessions/greffierService';
     import { useRouter } from 'vue-router';
+    import format from '@/utils/format.js'
 
 // Variables & state
 
@@ -80,7 +81,7 @@
         date_contrat: null,
         request_subject: null,
         reimbursed_amount: null,
-        date_cession: new Date().toISOString().split("T")[0],
+        date_cession: new Date(),
         tpi: null,
         user: null,
     });
@@ -100,7 +101,12 @@
             form.tpi = profil.user.tpi.id;
             form.user = profil.user.id;
 
-            const response = await greffierService.createCession(form);
+            const data = { 
+                ...form, 
+                date_cession: format.convertDate(form.date_cession), 
+                date_contrat: format.convertDate(form.date_contrat)
+            }
+            const response = await greffierService.createCession(data);
             const idCession = response.data.cession;
             
             router.push({ name: 'greffier-cession-add-lenders', params: { id: idCession } })
