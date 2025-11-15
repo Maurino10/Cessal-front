@@ -3,17 +3,17 @@
 
         <div class="w-full">
             <v-row>
-                <v-col cols="12" md="7">
-                    <h3 class="text-3xl font-thin text-gray-800 text-nowrap">{{ props.title }}</h3>
+                <v-col cols="12" md="12">
+                    <h3 class="text-xl font-thin text-gray-800 text-nowrap">{{ props.title }}</h3>
                     <p 
                         v-if="props.subtitle" 
-                        class="text-gray-500 text-caption text-wrap"
+                        class="text-gray-500 text-caption text-nowrap"
                     >
                         {{ props.subtitle }}
                     </p>
                 </v-col>
 
-                <v-col cols="12" md="5">
+                <v-col cols="12" md="12">
                     <slot name="header_actions"></slot>
                 </v-col>
             </v-row>
@@ -28,7 +28,7 @@
             
             <v-row>
                 <v-col>
-                    <div class="flex justify-between w-full">
+                    <div class="flex justify-end w-full gap-4">
                         <slot name="card_actions"></slot>            
                     </div>
                 </v-col>

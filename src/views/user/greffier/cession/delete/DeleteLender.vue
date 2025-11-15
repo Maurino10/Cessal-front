@@ -3,7 +3,7 @@
         :title="`Voulez-vous vraiment supprimer le prêteur '${props.lender.last_name} ${props.lender.first_name}'?`"
     >
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
             <VButton title="Supprimer" class="btn-delete" @click="removeLender" />
         </template>
     </VCardDelete>

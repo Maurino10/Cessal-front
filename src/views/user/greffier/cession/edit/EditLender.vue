@@ -62,8 +62,8 @@
         </template>
         
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Mettre à jour" class="btn-submit" @click="editLender" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Mettre à jour" class="btn-primary" @click="editLender" />
         </template>
     </VCardForm>
 </template>
@@ -165,11 +165,11 @@
             console.error(error.response.data);
         }
     }
-    const fetchEntityByTPI = async () => {
+    const fetchLegalPersonByTPI = async () => {
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await greffierService.getEntityByTPI(profil.user.tpi.id);
+            const response = await greffierService.getLegalPersonByTPI(profil.user.tpi.id);
             legalPersons.value = response.data.legal_persons;
         } catch (error) {
             console.error(error.response.data);
@@ -201,7 +201,7 @@
             form.address = props.lender.natural_person_address;
             form.gender = props.lender.natural_person.id_gender;
         } else {
-            await fetchEntityByTPI();
+            await fetchLegalPersonByTPI();
             const profil = JSON.parse(localStorage.getItem('profil'));
             form.tpi = profil.user.tpi.id
             form.type = props.lender.type; 

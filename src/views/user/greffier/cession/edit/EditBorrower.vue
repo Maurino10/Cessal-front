@@ -20,6 +20,7 @@
                     />
                 </v-col>
             </v-row>
+            
             <v-row>
                 <v-col class="!py-0">
                     <VSelect v-if="genders" label="Genre" placeholder="Sélectionner un genre" :items="genders" value="id" title="name" 
@@ -28,6 +29,7 @@
                     />
                 </v-col>
             </v-row>
+
             <v-row>
                 <v-col class="!py-0">
                     <VOptInput label="CIN" :length="12"
@@ -36,6 +38,7 @@
                     />
                 </v-col>
             </v-row>
+
             <v-row>
                 <v-col class="!py-0">
                     <VCombobox v-if="naturalPersonAddress" label="Adresse" placeholder="Entrer l'adresse d'emprunteur" :items="naturalPersonAddress" value="id" title="address"
@@ -44,6 +47,7 @@
                     />
                 </v-col>
             </v-row>
+
             <v-row>
                 <v-col class="!py-0">
                     <VInput label="Montant revenu" placeholder="Entrer la montant revenu du emprunteur" type="number"
@@ -52,6 +56,7 @@
                     />
                 </v-col>
             </v-row>
+
             <v-row>
                 <v-col class="!py-0">
                     <VTextArea label="Observation" placeholder="Entrer l'observation du emprunteur"
@@ -63,8 +68,8 @@
         </template>
         
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Mettre à jour" class="btn-submit" @click="editBorrower" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Mettre à jour" class="btn-primary" @click="editBorrower" />
         </template>
     </VCardForm>
 </template>

@@ -16,55 +16,70 @@
                 <VButton 
                     title="Nouveau TPI" 
                     icon="mdi-plus" 
-                    class="btn-add" 
+                    class="btn-primary" 
                     @click="handleAdd()"
                 />
             </template>
     
         </VMainHeader>
-    
-        <v-skeleton-loader
-          v-if="loading"
+        
+        <FilterTPI
+            v-if="ca"
+            :ca="ca"
+            @filter="filterTPI"
+        />
+
+        <v-skeleton-loader v-if="loading"
           type="table-tbody"
           class="mt-4"
-        />
-    
-        <VTable v-else-if="tpis !== null && tpis.length > 0" class="custom-table" density="comfortable">
-    
-             <template #thead>
-                <tr>
-                    <th class="text-left">TPI</th>
-                    <th class="text-left">Cour d'appel</th>
-                    <th class="text-center">Actions</th>
-                </tr>
-             </template>
-    
-            <template #tbody>
-                <tr v-for="tpi in tpis" :key="tpi.name">
-                    <td>
-                        <VCellIconText
-                            icon="mdi-bank" 
-                            :text="tpi.name"
-                            iconColor="text-blue-500"
-                            bgColor="bg-blue-100"
-                        />
-                    </td>
-                
-                    <td>
-                        {{ tpi.ca.name }}
-                    </td>
-    
-                    <td class="text-center">
-                        <VTableAction 
-                            :actions="actions" 
-                            :title="tpi.name" 
-                            :objet="tpi" 
-                            @action="handleActions" 
-                        /> 
-                    </td>
-                </tr>
-            </template>
-        </VTable>
+        />  
+
+        
+        <div v-else-if="tpis !== null && tpis.data.length > 0">  
+
+            <VTable class="custom-table" density="comfortable">
+        
+                 <template #thead>
+                    <tr>
+                        <th class="text-left">TPI</th>
+                        <th class="text-left">Cour d'appel</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                 </template>
+        
+                <template #tbody>
+                    <tr v-for="tpi in tpis.data" :key="tpi.name">
+                        <td>
+                            <VCellIconText
+                                icon="mdi-bank" 
+                                :text="tpi.name"
+                                iconColor="text-blue-500"
+                                bgColor="bg-blue-100"
+                            />
+                        </td>
+                    
+                        <td>
+                            {{ tpi.ca.name }}
+                        </td>
+        
+                        <td class="text-center">
+                            <VTableAction 
+                                :actions="actions" 
+                                :title="tpi.name" 
+                                :objet="tpi" 
+                                @action="handleActions" 
+                            /> 
+                        </td>
+                    </tr>
+                </template>
+            </VTable>
+
+            <VPagination
+                v-model="page"
+                :length="tpis.last_page"
+                @paginate="paginate"
+            />
+        </div>
     
         <div v-else
             class="flex flex-col items-center justify-center px-6 py-12 mt-8"
@@ -118,9 +133,12 @@
     import VMainHeader from '@/components/VMainHeader.vue';
     import VTable from '@/components/VTable.vue';
     import VTableAction from '@/components/VTableAction.vue';
+    import VPagination from '@/components/VPagination.vue';
     import VCellIconText from '@/components/VCellIconText.vue';
     import VButton from '@/components/VButton.vue';
     import VBreadCrumb from '@/components/VBreadCrumb.vue';
+    import FilterTPI from './FilterTPI.vue';
+    import axios from "@/services/axiosInstance";
     import tpiService from "@/services/instances/tpiService";
     import caService from "@/services/instances/caService";
     import districtService from "@/services/territories/districtService";
@@ -139,10 +157,14 @@
     const objet = ref(null);
     
     const loading = ref(false);
+
+    const page = ref(1);
+    const search = ref('');
+    const selectedCa = ref(null);
     
     const actions = [
         {action: 'edit', title: 'Modifier', icon: 'mdi-pencil'},
-        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline', style: '!border-t !text-red-500'},
+        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline'},
     ]
 
 // Functions
@@ -158,9 +180,22 @@
         overlay.value = !overlay.value;
     }
     
+    const paginate = async () => {
+        await fetchAllTPI();
+    }
+
+
+
+    const filterTPI = async (searchTPI, caSelected) => {
+        search.value = searchTPI;
+        selectedCa.value = caSelected;
+        page.value = 1;
+        await fetchAllTPI();
+    }
+    
     const fetchAllTPI= async () => {
         try {
-            const response = await tpiService.getAllTPI();
+            const response = await tpiService.getAllTPI(search.value, selectedCa.value, page.value);
             tpis.value = response.data.tpi;
         } catch (error) {
             console.error(error.response.data); 
@@ -169,7 +204,7 @@
 
     const fetchAllDistrict = async () => {
         try {
-            const response = await districtService.getAllDistrict();
+            const response = await districtService.listDistrict();
             districts.value = response.data.districts;
         } catch (error) {
             console.error(error.response.data);
@@ -178,7 +213,7 @@
     
     const fetchAllCA = async () => {
         try {
-            const response = await caService.getAllCA();
+            const response = await caService.listCA();
             ca.value = response.data.ca;
         } catch (error) {
             console.error(error.response.data);

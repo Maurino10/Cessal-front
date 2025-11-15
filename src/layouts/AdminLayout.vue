@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
     import Sidebar from './Sidebar.vue';
     import authService from "@/services/auth/authService";
     import { useRouter } from 'vue-router';
@@ -20,10 +19,18 @@
     
     const profil = {
       first_name: 'Admin',
-      last_name: 'Super'
+      last_name: 'Super',
+      user: {
+        post: {
+          name: 'Administrateur'
+        }
+      },
+      role: 'admin'
     }; 
 
     const navigations = [
+      {icon: 'mdi-view-dashboard-outline', title: 'Tableau de bord', link: '/admin/dashboard'},
+      {icon: 'mdi-chart-donut', title: 'Cessions', link: '/admin/cessions'},
       {icon: 'mdi-bank-outline', title: 'Instances', link: '/admin/instances'},
       {icon: 'mdi-map-outline', title: 'Territoires', link: '/admin/territoires'},
       {icon: 'mdi-account-outline', title: 'Utilisateurs', link: '/admin/utilisateurs'},

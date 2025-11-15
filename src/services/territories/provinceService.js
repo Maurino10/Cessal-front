@@ -1,8 +1,8 @@
 import axios from '@/services/axiosInstance.js';
 
 export default {
-    getAllProvince () {
-        return axios.get('/provinces');
+    getAllProvince (search, page) {
+        return axios.get(`/provinces?search=${search}&page=${page}`);
     },
 
     createProvince (province) {
@@ -16,4 +16,9 @@ export default {
     deleteProvince (id) {
         return axios.delete(`/provinces/${id}`);
     },
+
+    listProvince () {
+        return axios.get(`/province-list`);
+    },
+
 }

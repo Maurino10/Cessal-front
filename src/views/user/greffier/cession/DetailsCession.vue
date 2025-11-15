@@ -9,8 +9,7 @@
     />
 
     <div class="main-body">
-        <VMainHeader 
-            v-if="cession"
+        <VMainHeader v-if="cession"
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
             :title="cession.numero_dossier" 
             subtitle="Numéro du dossier" 
@@ -23,9 +22,10 @@
 
             <template #actions>
                  <VButton
-                    v-if="cession.signed === 0 && cession.status_cession > 0"
+                    v-if="cession.signed === 0 && cession.status_cession == 2"
                     title="Signée"
-                    class="btn-submit"
+                    icon="mdi-draw-pen"
+                    class="btn-primary"
                     @click="cessionSigned"
                 />
             </template>

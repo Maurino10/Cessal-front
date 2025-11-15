@@ -1,8 +1,20 @@
 <template>
-    <div class="h-full p-5 rounded-lg custom-border">
+    <div class="h-full p-5 custom-shadow rounded-lg">
         
-        <div class="mb-10">
-            <h3 class="text-xl font-bold text-gray-700">Informations Générales</h3>
+        <div class="mb-6">
+            <div class="flex items-center gap-2">
+                <span>
+                    <v-icon
+                        icon="mdi-text-box-outline"
+                        size="32"
+                        color="#10b981"
+                    ></v-icon>
+                </span>
+
+                <h4 class="text-xl font-bold">
+                    Informations Générales
+                </h4>
+            </div>
         </div>
 
         <div v-if="props.cession" class="rounded-lg">

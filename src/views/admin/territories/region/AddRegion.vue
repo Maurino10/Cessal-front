@@ -30,8 +30,8 @@
             </v-row>
         </template>
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Enregistrer" class="btn-submit" @click="saveRegion" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Enregistrer" class="btn-primary" @click="saveRegion" />
         </template>
     </VCardForm>
 </template>

@@ -9,8 +9,7 @@
                 @click="removeDistrict" 
             />
             <VButton 
-                title="Annuler" 
-                class="btn-cancel" 
+                title="Annuler"  
                 @click="closeDialog"  
             />
         </template>

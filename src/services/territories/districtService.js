@@ -2,8 +2,8 @@ import axios from '@/services/axiosInstance.js';
 
 
 export default {
-    getAllDistrict() {
-        return axios.get('/districts');
+    getAllDistrict(search, province, region, page) {
+        return axios.get(`/districts?search=${search}&province=${province}&region=${region}&page=${page}`);
     },
 
     createDistrict(district) {
@@ -18,13 +18,7 @@ export default {
         return axios.delete(`/districts/${id}`);
     },
 
-    filterDistrict(word, idProvince, idRegion) {
-        return axios.get('/districts-filter', {
-          params: {
-            word: word,
-            province: idProvince,
-            region: idRegion
-          }
-        });
-    },
+    listDistrict() {
+        return axios.get(`/district-list`);
+    } 
 }

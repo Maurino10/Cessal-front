@@ -4,13 +4,12 @@
     >
         <template #card_actions>
             <VButton 
-                title="Annuler" 
-                class="btn-cancel" 
+                title="Annuler"  
                 @click="closeDialog"  
             />
             <VButton 
                 title="Supprimer" 
-                class="btn-delete" 
+                class="btn-delete"   
                 @click="removeTPI" 
             />
         </template>

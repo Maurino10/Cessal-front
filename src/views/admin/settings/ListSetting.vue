@@ -15,12 +15,24 @@
         <div>
             <v-row>
                 <v-col cols="12">     
-                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
-                        <h4>Provision</h4> 
+                    <div class="flex items-center justify-between p-4 border rounded-lg">
+                        <div class="flex items-center gap-2">
+                            <span>
+                                <v-icon
+                                    icon="mdi-cash"
+                                    size="42"
+                                    color="#9ca3af"
+                                ></v-icon>
+                            </span>
+                
+                            <h4 class="text-lg">
+                                Provision
+                            </h4>
+                        </div>
     
                         <v-icon
                             icon="mdi-chevron-right"
-                            class="p-4 bg-white rounded-[14px]"
+                            class="p-4 bg-gray-100 rounded-[14px]"
                             size="16"
                             @click="goToLink('/admin/parametres/provision')"
                         ></v-icon>

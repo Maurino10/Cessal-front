@@ -9,39 +9,41 @@
     <div class="main-body">
         <VMainHeader 
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
-            title="Liste des Cession" 
+            title="Liste des Cessions" 
             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit." 
         >
             <template #actions>
                 <VButton 
                     title="Nouvelle cession" 
                     icon="mdi-plus" 
-                    class="btn-add" 
+                    class="btn-primary" 
                     @click="handleAdd"
                 />
             </template>
         </VMainHeader>
-    
-         <v-skeleton-loader
-          v-if="loading"
+
+        <FilterCession
+            @filter="filterCession"
+        />
+        <v-skeleton-loader v-if="loading"
           type="table-tbody"
           class="mt-4"
         />
-    
-        <div v-else-if="cessions !== null && cessions.length > 0">
+
+        <div v-else-if="cessions !== null && cessions.data.length > 0">
             <VTable>
                 <template #thead>
                     <tr>
                         <th>Numéro Dossier</th>
                         <th>Objet de la demande</th>
                         <th class="text-right">Montant à remboursé</th>
-                        <th class="text-center">Date</th>
+                        <th class="text-center">Date de cession</th>
                         <th>Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </template>
                 <template #tbody>
-                    <tr v-for="(cession, index) in cessions" :key="index">
+                    <tr v-for="(cession, index) in cessions.data" :key="index">
                         <td>
                             <div class="flex items-center gap-3">
                                 <div class="flex items-center justify-center p-2 bg-teal-100 rounded-lg shadow-sm">
@@ -86,6 +88,12 @@
                     </tr>
                 </template>
             </VTable>
+
+            <VPagination
+                v-model="page"
+                :length="cessions.last_page"
+                @paginate="paginate"
+            />
         </div>
     
         <div v-else
@@ -117,8 +125,10 @@
     import VMainHeader from '@/components/VMainHeader.vue';
     import VButton from '@/components/VButton.vue';
     import VTable from '@/components/VTable.vue';
+    import VPagination from '@/components/VPagination.vue';
     import greffierService from '@/services/cessions/greffierService';
     import format from '@/utils/format';
+    import FilterCession from './FilterCession.vue';
 
 // Variables & state
     const cessions = ref(null);
@@ -127,6 +137,10 @@
 
     const loading = ref(false);
 
+    const page = ref(1);
+    const search = ref('');
+    const statut = ref(-1);
+
 // Functions 
 
     const handleAdd = () => {
@@ -134,14 +148,30 @@
     }
 
     const details = (obj) => {
-            router.push({ name: 'greffier-cession-details', params: { id: obj.id } })
+        router.push({ name: 'greffier-cession-details', params: { id: obj.id } })
+    }
+
+    const paginate = async () => {
+        await fetchAllCession();
+    }
+
+    const filterCession = async (srch, stat) => {
+        search.value = srch;
+        statut.value = stat;
+        page.value = 1;
+        await fetchAllCession();
     }
     
     const fetchAllCession = async() => {
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await greffierService.getAllCessionByGreffier(profil.user.id);
+            const response = await greffierService.getAllCessionByGreffier(
+                profil.user.id, 
+                search.value, 
+                statut.value,
+                page.value
+            );
             cessions.value = response.data.cessions
         } catch (error) {
             console.error(error)

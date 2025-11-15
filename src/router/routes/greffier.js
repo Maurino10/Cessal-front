@@ -14,7 +14,7 @@ const greffierRoutes = [
       // Cession routes
       {
         path: 'cessions',
-        component: () => import('../../views/user/greffier/GestionCession.vue'),
+        component: () => import('../../views/user/greffier/cession/GestionCession.vue'),
         redirect: { name: 'greffier-cession-list' },
         children: [
           {
@@ -101,11 +101,23 @@ const greffierRoutes = [
             component: () => import('../../views/user/greffier/cession/add/AssignCession.vue'),
           },
           {
-            path: 'cessions/:id/emprunteurs/:idBorrower',
+            path: ':id/emprunteurs/:idBorrower',
             name: 'greffier-cession-borrowers-details',
             component: () => import('../../views/user/greffier/cession/details/DetailsCessionBorrower.vue'),
           },
+          {
+            path: ':id/emprunteurs/:idBorrower',
+            name: 'greffier-cession-borrowers-impression',
+            component: () => import('../../views/user/greffier/cession/details/ImpressionCessionBorrower.vue'),
+          },
         ]
+      },
+
+      // Mon profil
+      {
+        path: 'profil',
+        name: 'greffier-profil',
+        component: () => import('../../views/user/greffier/profil/DetailsProfil.vue'),
       }
     ]
   }

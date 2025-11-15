@@ -22,23 +22,33 @@
             <v-col>
                 <div class="flex-grow h-full p-8 rounded-lg custom-shadow">
 
-                    <h1 class="mb-5 text-xl text-center text-gray-800">Informations d'emprunteur</h1>
+                    <div class="flex flex-col items-center gap-4 mb-6">
+                        <span>
+                            <v-icon
+                                icon="mdi-information-outline"
+                                size="32"
+                                color="#10b981"
+                                class="p-8 rounded-full bg-emerald-100" 
+                            ></v-icon>
+                        </span>
+                        <h1 class="text-xl">Informations d'emprunteur</h1>
+                    </div>
                     
                     <div class="py-2 border-b">
-                        <h4 class="text-base text-gray-400">Nom</h4>
-                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person.last_name }}</p>
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">Nom</h4>
+                        <p class="text-base">{{ borrower.natural_person.last_name }}</p>
                     </div>
                     <div class="py-2 border-b">
-                        <h4 class="text-base text-gray-400">Prénom</h4>
-                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person.first_name }}</p>
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">Prénom</h4>
+                        <p class="text-base">{{ borrower.natural_person.first_name }}</p>
                     </div>
                     <div class="py-2 border-b">
-                        <h4 class="text-base text-gray-400">CIN</h4>
-                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person.cin }}</p>
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">CIN</h4>
+                        <p class="text-base">{{ borrower.natural_person.cin }}</p>
                     </div>
-                    <div class="py-2 text-base">
-                        <h4 class="text-base text-gray-400">Adresse</h4>
-                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.natural_person_address.address }}</p>
+                    <div class="py-2 border-b">
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">Adresse</h4>
+                        <p class="text-base">{{ borrower.natural_person_address.address }}</p>
                     </div>
                 </div>
             </v-col>
@@ -46,27 +56,37 @@
             <v-col>
                 <div class="flex-grow h-full p-8 rounded-lg custom-shadow">
 
-                    <h1 class="mb-5 text-xl text-center text-gray-800">Détails financiers</h1>
+                    <div class="flex flex-col items-center gap-4 mb-6">
+                        <span>
+                            <v-icon
+                                icon="mdi-cash-multiple"
+                                size="32"
+                                color="#10b981"
+                                class="p-8 rounded-full bg-emerald-100" 
+                            ></v-icon>
+                        </span>
+                        <h1 class="text-xl">Détails financiers</h1>
+                    </div>
                     
                     <div class="py-2 border-b">
-                        <h4 class="text-base text-gray-400">Montant revenu</h4>
-                        <p class="text-base font-bold tracking-wide text-emerald-500">{{ format.formatMontant(borrower.salary_amount) }}</p>
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">Montant revenu</h4>
+                        <p class="text-base">{{ format.formatMontant(borrower.salary_amount) }}</p>
                     </div>
                     <div class="py-2 border-b">
-                        <h4 class="text-base text-gray-400">Montant accordé</h4>
-                        <p v-if="borrower.quota" class="text-base font-bold tracking-wide text-emerald-500">
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">Montant accordé</h4>
+                        <p v-if="borrower.quota" class="text-base">
                             {{ format.formatMontant(borrower.quota.granted_amount) }}
                         </p>
-                        <p v-else class="text-base tracking-wide text-amber-500">
+                        <p v-else class="text-base text-amber-500">
                             En attente
                         </p>
                     </div>
-                    <div class="py-2 text-base">
-                        <h4 class="text-base text-gray-400">Pourcentage</h4>
-                        <p v-if="borrower.quota" class="text-base font-bold tracking-wide text-emerald-500">
+                    <div class="py-2 border-b">
+                        <h4 class="text-sm leading-9 tracking-wide text-gray-400">Pourcentage</h4>
+                        <p v-if="borrower.quota" class="text-base">
                             {{ borrower.quota.percentage }} %
                         </p>
-                        <p v-else class="text-base tracking-wide text-amber-500">
+                        <p v-else class="text-base text-amber-500">
                             En attente
                         </p>
                     </div>
@@ -76,72 +96,75 @@
             <v-col>
                 <div class="flex-grow h-full p-8 rounded-lg custom-shadow">
 
-                    <h1 class="mb-5 text-xl text-center text-gray-800">Références d’enregistrement</h1>
+                    <div class="flex flex-col items-center gap-4 mb-6">
+                        <span>
+                            <v-icon
+                                icon="mdi-receipt-text-outline"
+                                size="32"
+                                color="#10b981"
+                                class="p-8 rounded-full bg-emerald-100" 
+                            ></v-icon>
+                        </span>
+                        <h1 class="text-xl">Références d’enregistrement</h1>
+                    </div>
 
                     <div v-if="borrower.reference !== null">
                         <div class="py-2 border-b">
-                            <h4 class="text-base text-gray-400">Reçu nº</h4>
-                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_recu }}</p>
+                            <h4 class="text-sm leading-9 tracking-wide text-gray-400">Reçu nº</h4>
+                            <p class="text-base">{{ borrower.reference.numero_recu }}</p>
                         </div>
                         <div class="py-2 border-b">
-                            <h4 class="text-base text-gray-400">Feuillet nº</h4>
-                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_feuillet }}</p>
+                            <h4 class="text-sm leading-9 tracking-wide text-gray-400">Feuillet nº</h4>
+                            <p class="text-base">{{ borrower.reference.numero_feuillet }}</p>
                         </div>
                         <div class="py-2 border-b">
-                            <h4 class="text-base text-gray-400">Répertoire nº</h4>
-                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ borrower.reference.numero_repertoire }}</p>
+                            <h4 class="text-sm leading-9 tracking-wide text-gray-400">Répertoire nº</h4>
+                            <p class="text-base">{{ borrower.reference.numero_repertoire }}</p>
                         </div>
-                        <div class="py-2 text-base">
-                            <h4 class="text-base text-gray-400">Du</h4>
-                            <p class="text-base font-bold tracking-wide text-emerald-500">{{ format.formatDate(borrower.reference.date) }}</p>
+                        <div class="py-2 border-b">
+                            <h4 class="text-sm leading-9 tracking-wide text-gray-400">Du</h4>
+                            <p class="text-base">{{ format.formatDate(borrower.reference.date) }}</p>
                         </div>
     
                         <div class="flex gap-4 mt-8">
                              <VButton
                                 v-if="cession.signed === 0"
                                 title="Modifier"
-                                class="flex-grow btn-cancel"
+                                class="flex-grow btn-secondary"
                                 @click="handleEdit(borrower.reference)"
-                            />
-                            <VButton
-                                title="Imprimer"
-                                class="flex-grow btn-submit"
-                                @click="downloadDeclaration(borrower.reference)"
                             />
                         </div>
                     </div>
 
-                        <div v-else
-                            class="flex flex-col items-center justify-center px-6 py-12 mt-8"
-                        >
-                            <!-- Icône -->
-                            <v-icon size="48" class="mb-4 text-gray-400">
-                                mdi-circle-off-outline
-                            </v-icon>
+                    <div v-else
+                        class="flex flex-col items-center justify-center px-6 py-12 mt-8"
+                    >
+                        <!-- Icône -->
+                        <v-icon size="48" class="mb-4 text-gray-400">
+                            mdi-circle-off-outline
+                        </v-icon>
 
-                            <!-- Texte principal -->
-                            <p class="mb-1 text-base font-semibold text-gray-700">
-                                Référence non définie
-                            </p>
+                        <!-- Texte principal -->
+                        <p class="mb-1 text-base font-semibold text-gray-700">
+                            Référence non définie
+                        </p>
 
-                            <!-- Texte secondaire -->
-                            <p class="mb-4 text-xs text-center text-gray-500">
-                                Veuillez enregistrer le reçu, le feuillet et le répertoire afin de pouvoir imprimer la déclarattion de cession.
-                            </p>
+                        <!-- Texte secondaire -->
+                        <p class="mb-4 text-xs text-center text-gray-500">
+                            Veuillez enregistrer le reçu, le feuillet et le répertoire afin de pouvoir imprimer la déclarattion de cession.
+                        </p>
 
-                            <div>
-                                <VButton
-                                    title="Définir la référence" 
-                                    class="btn-submit"
-                                    @click="handleAdd"
-                                />
-                            </div>
+                        <div>
+                            <VButton
+                                title="Définir la référence" 
+                                class="btn-primary"
+                                @click="handleAdd"
+                            />
                         </div>
+                    </div>
                     
                 </div>
-            </v-col>
-            
-    
+            </v-col> 
         </v-row>
     </div>
 

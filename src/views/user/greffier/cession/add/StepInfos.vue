@@ -1,11 +1,13 @@
 <template>
+    
     <div>
-        <div class="mb-8">
-            <h3 class="relative py-2 text-xl text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-400 before:bottom-0 before:rounded-full"> 
-                1 - Informations générales
+        <div class="mb-12">
+            <h3 class="text-2xl"> 
+                <span class="font-bold text-emerald-500">01. </span>
+                Informations générales
             </h3>
         </div>
-
+        
         <v-row>
             <v-col class="!py-0">
                 <VInput label="Numéro du dossier" type="text" placeholder="Entrer le numéro du dossier"
@@ -52,7 +54,7 @@
                 title="Suivant"
                 icon="mdi-arrow-right-thin"
                 iconPosition="right"
-                class="btn-submit"
+                class="btn-primary"
                 @click="saveCession"
             />
         </div>

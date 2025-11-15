@@ -3,8 +3,8 @@ import axios from '@/services/axiosInstance.js';
 
 
 export default {
-    getAllTPI() {
-        return axios.get('/tpi');
+    getAllTPI(search, ca, page) {
+        return axios.get(`/tpi?search=${search}&ca=${ca}&page=${page}`);
     },
 
     createTPI(tpi) {
@@ -19,26 +19,21 @@ export default {
         return axios.delete(`/tpi/${id}`);
     },
 
-    filterTPI(word, idProvince, idRegion, idDistrict) {
-        return axios.get('/tpi-filter', {
-          params: {
-            word: word,
-            province: idProvince,
-            region: idRegion,
-            district: idDistrict
-          }
-        });
-    },
-
     listTPI () {
       return axios.get('/public/tpi');
     },
 
-    importTPI (formData) {
-      return axios.post('/tpi/import', formData, {
+    importInstance (formData) {
+      return axios.post('/instance-import', formData, {
         headers:  {
             'Content-Type': 'multipart/form-data'
         },
       })
-    }
+    },
+
+    exportModelInstance () {
+      return axios.get('/instance-export', {
+        responseType: 'blob', // 👈 très important
+      });
+    },
 }

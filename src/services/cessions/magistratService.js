@@ -5,8 +5,8 @@ export default {
 
 // --------------------------------------------- Cession
 
-    getAllCessionByMagistrat(idUser) {
-        return axios.get(`/magistrat/${idUser}/cessions`);
+    getAllCessionByMagistrat(idUser, search, statut, page) {
+        return axios.get(`/magistrat/${idUser}/cessions?search=${search}&statut=${statut}&page=${page}`);
     },
 
     getCession(idCession) {

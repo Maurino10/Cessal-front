@@ -6,14 +6,14 @@
         width="800"
     >   
         <template #header_actions>
-            <div class="flex p-1 mb-5 bg-gray-100 rounded-lg">
-                <button class="flex-grow px-4 py-3 text-gray-500 transition-all duration-300 ease-in border-none rounded-md" 
+            <div class="flex p-1 bg-gray-100 rounded-lg">
+                <button class="flex-grow p-2 text-gray-500 transition-all duration-200 ease-in rounded-md" 
                     :class="typeLender === 'natural_person' ? 'active' : ''"
                     @click="typeLender = 'natural_person'"
                 >
                     Personne
                 </button>
-                <button class="flex-grow px-4 py-3 text-gray-500 transition-all duration-300 ease-in border-none rounded-md"
+                <button class="flex-grow p-2 text-gray-500 transition-all duration-200 ease-in rounded-md"
                     :class="typeLender === 'legal_person' ? 'active' : ''"
                     @click="typeLender = 'legal_person'"
                 >
@@ -65,11 +65,12 @@
                             v-model:model="form.address"
                             v-model:error="errors.address"
                         />
-                        
-                        <VInput v-else label="Adresse" placeholder="Entrer l'adresse du prêteur" type="text"
+
+                        <VInput v-else label="Adresse" placeholder="Entrer l'adresse du emprunteur" type="text"
                             v-model:model="form.address"
                             v-model:error="errors.address"
                         />
+
                     </v-col>
                 </v-row>
 
@@ -83,7 +84,7 @@
             <div v-else>
                 <v-row>
                     <v-col class="!py-0">
-                        <VCombobox v-if="legalPersons" label="Entités" placeholder="Entrer le prêteur" :items="legalPersons" value="id" :title="formatEntityLabel"
+                        <VCombobox v-if="legalPersons" label="Entités" placeholder="Entrer le prêteur" :items="legalPersons" value="id" title="name"
                             v-model:model="form.name"
                             v-model:error="errors.name"
                         />
@@ -92,18 +93,24 @@
 
                 <v-row>
                     <v-col class="!py-0">
-                        <VInput label="Adresse" placeholder="Entrer l'adresse" type="text"
+                        <VCombobox v-if="legalPerson" label="Adresse" placeholder="Entrer l'adresse" :items="legalPersonAddresses" value="id" title="address"
                             v-model:model="form.address"
                             v-model:error="errors.address"
                         />
+
+                        <VInput v-else label="Adresse" placeholder="Entrer l'adresse" type="text"
+                            v-model:model="form.address"
+                            v-model:error="errors.address"
+                        />
+
                     </v-col>
                 </v-row>
             </div>
         </template>
         
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Ajouter" class="btn-submit" @click="addLender" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Ajouter" class="btn-primary" @click="addLender" />
         </template>
     </VCardForm>
 </template>
@@ -137,6 +144,9 @@
     const cinExists = ref(false);
     const naturalPerson = ref(null);
     const naturalPersonAddresses = ref(null);
+
+    const legalPerson = ref(null);
+    const legalPersonAddresses = ref(null);
     
     let debounceTimer = null;
      
@@ -167,12 +177,12 @@
 // 🔸 Pour vider les champs non utilisés selon le type sélectionné
 
 // Functions
-    const formatEntityLabel = (legalPerson) => {
-        if (typeof legalPerson === 'string') return legalPerson; // ⚠️ Permet de taper librement !
-        return legalPerson && legalPerson.name
-            ? `${legalPerson.name} — ${legalPerson.address || 'Adresse inconnue'}`
-            : '';
-    };
+    // const formatEntityLabel = (legalPerson) => {
+    //     if (typeof legalPerson === 'string') return legalPerson; // ⚠️ Permet de taper librement !
+    //     return legalPerson && legalPerson.name
+    //         ? `${legalPerson.name} — ${legalPerson.address || 'Adresse inconnue'}`
+    //         : '';
+    // };
     
     const closeDialog = () => {
         model.value = !model.value
@@ -201,17 +211,19 @@
         debounceTimer = setTimeout(() => checkCIN(newVal), 300); // délai debounce
     });
 
+
     watch(() => form.name, (newVal) => {
         if (typeof form.name === 'object' && form.name !== null) {
-            form.address = newVal.address
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => checkLegalPerson(newVal), 300);    
         } else {
             form.address = null;
         }
     });
 
-    const checkCIN = async ($cin) => {
+    const checkCIN = async (cin) => {
         try {
-            const response = await greffierService.checkCIN($cin);
+            const response = await greffierService.checkCIN(cin);
 
             if (response.data.exists) {
                 naturalPerson.value = response.data.natural_person;
@@ -234,6 +246,23 @@
         }
     }
 
+    const checkLegalPerson = async (legal) => {
+        try {
+            const response = await greffierService.getAllAddressCessionLegalPerson(legal.id);
+
+            if (response.data.addresses) {
+                legalPerson.value = legal.id;
+                legalPersonAddresses.value = response.data.addresses;
+                form.address = null;
+            } else {
+                form.address = null;
+            }   
+            
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     const addLender = async () => {
 
         openLoader(true);
@@ -244,9 +273,17 @@
             if (typeLender.value === 'legal_person') {
 
                 if (typeof form.name === 'object' && form.name !== null) {
-                    const response = await greffierService.createCessionLenderEntityExists(props.idCession, { 
-                        natural_person: form.name.id,
-                    });
+                    if (typeof form.address === 'object' && form.address !== null) {
+                        const response = await greffierService.createCessionLenderLegalPersonExists(props.idCession, { 
+                            legal_person: form.name.id,
+                            legal_person_address: form.address.id
+                        });
+                    } else {
+                        const response = await greffierService.createCessionLenderLegalPersonExistsNewAddress(props.idCession, { 
+                            legal_person: form.name.id,
+                            legal_person_address: form.address
+                        });
+                    }
                     
                 } else {
                     const profil = JSON.parse(localStorage.getItem('profil'));
@@ -258,18 +295,17 @@
             } else {
                 if (cinExists.value === true) {
                     if (typeof form.address === 'object' && form.address !== null) {
-                        const response = await greffierService.createCessionLenderExists(props.idCession, { 
+                        const response = await greffierService.createCessionLenderNaturalPersonExists(props.idCession, { 
                             natural_person: naturalPerson.value.id,
                             natural_person_address: form.address.id
                         });
                     } else {
-                        const response = await greffierService.createCessionLenderExistsNewAddress(props.idCession, { 
+                        const response = await greffierService.createCessionLenderNaturalPersonExistsNewAddress(props.idCession, { 
                             natural_person: naturalPerson.value.id, 
-                            address: form.address 
+                            natural_person_address: form.address 
                         });
                     }
                 } else {
-                    console.log("Ato");
                     const response = await greffierService.createCessionLender(props.idCession, form);
                 }
             }
@@ -285,7 +321,6 @@
             openLoader(false);
 
             if (error.response.data.errors) {
-                console.log(error.response.data.errors);
                 formErrorUtils.setErrors(error.response.data.errors, errors)
             }
         }
@@ -301,11 +336,11 @@
         }
     };
 
-    const fetchEntityByTPI = async () => {
+    const fetchLegalPersonByTPI = async () => {
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await greffierService.getEntityByTPI(profil.user.tpi.id);
+            const response = await greffierService.getLegalPersonByTPI(profil.user.tpi.id);
             legalPersons.value = response.data.legal_persons;
         } catch (error) {
             console.error(error.response.data);
@@ -317,7 +352,7 @@
     onMounted(async () => {
         await Promise.all([
             fetchAllGender(),
-            fetchEntityByTPI(),
+            fetchLegalPersonByTPI(),
         ]);
     })
 </script>
@@ -325,6 +360,6 @@
 <style scoped>
     button.active {
         background: #fff;
-        color: #059669;
+        color: #10b981;
     }
 </style>

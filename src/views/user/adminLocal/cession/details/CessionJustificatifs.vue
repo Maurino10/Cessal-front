@@ -1,15 +1,27 @@
 <template>
-    <div class="p-5 rounded-lg custom-border">
+    <div class="p-5 rounded-lg custom-shadow">
 
-        <div class="mb-8">
-            <h3 class="text-xl font-bold text-gray-700">Pièces Justificatives</h3>
+        <div class="mb-5">
+            <div class="flex items-center gap-2">
+                <span>
+                    <v-icon
+                        icon="mdi-paperclip"
+                        size="32"
+                        color="#10b981"
+                    ></v-icon>
+                </span>
+    
+                <h4 class="text-xl font-bold">
+                    Pièces Justificatives
+                </h4>
+            </div>
         </div>
         
         <div v-if="props.justificatifs !== null && props.justificatifs.length > 0" class="flex flex-wrap items-center gap-5">
             <div 
                 v-for="(justif, index) in displayedJustificatifs" :key="index"
             >
-                <div class="relative flex flex-col items-center h-full gap-3 p-5 overflow-hidden rounded-md group w-52 custom-border">
+                <div class="relative flex flex-col items-center h-full gap-3 p-5 overflow-hidden border rounded-md group w-52">
                     <v-icon
                         icon="mdi-file-pdf-box"
                         size="42"
@@ -37,8 +49,7 @@
 
         </div>
         
-        <div
-            v-else
+        <div v-else
             class="flex flex-col items-center justify-center px-6 py-6 mt-8"
         >
             <!-- Texte principal -->

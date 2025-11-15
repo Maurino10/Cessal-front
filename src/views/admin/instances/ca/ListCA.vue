@@ -17,55 +17,65 @@
                 <VButton 
                     title="Nouvelle CA" 
                     icon="mdi-plus" 
-                    class="btn-add" 
+                    class="btn-primary" 
                     @click="handleAdd()"
                 />
             </template>
         </VMainHeader>
-    
-        <v-skeleton-loader
-          v-if="loading"
+        
+        <FilterCA
+            @filter="filterCA" 
+        />
+        <v-skeleton-loader v-if="loading"
           type="table-tbody"
           class="mt-4"
         />
-    
-        <VTable v-else-if="ca !== null && ca.length > 0">
-    
-            <template #thead>
-                <tr>
-                    <th class="text-left">CA</th>
-                    <th class="text-left">Province</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </template>
-            
-            <template #tbody>
-                    <tr v-for="c in ca" :key="c.name">
-    
-                        <td>
-                            <VCellIconText
-                                icon="mdi-scale-balance" 
-                                :text="c.name"
-                                iconColor="text-purple-500"
-                                bgColor="bg-purple-100"
-                            />                  
-                        </td>
-    
-                        <td>
-                            {{ c.province.name }}
-                        </td>
-                        
-                        <td class="text-center">
-                            <VTableAction 
-                                :actions="actions" 
-                                :title="c.name" 
-                                :objet="c" 
-                                @action="handleActions" 
-                            /> 
-                        </td>
+        
+        <div v-else-if="ca !== null && ca.data.length > 0">
+            <VTable>
+        
+                <template #thead>
+                    <tr>
+                        <th class="text-left">CA</th>
+                        <th class="text-left">Province</th>
+                        <th class="text-center">Action</th>
                     </tr>
-            </template>
-        </VTable>
+                </template>
+                
+                <template #tbody>
+                        <tr v-for="c in ca.data" :key="c.name">
+        
+                            <td>
+                                <VCellIconText
+                                    icon="mdi-scale-balance" 
+                                    :text="c.name"
+                                    iconColor="text-purple-500"
+                                    bgColor="bg-purple-100"
+                                />                  
+                            </td>
+        
+                            <td>
+                                {{ c.province.name }}
+                            </td>
+                            
+                            <td class="text-center">
+                                <VTableAction 
+                                    :actions="actions" 
+                                    :title="c.name" 
+                                    :objet="c" 
+                                    @action="handleActions" 
+                                /> 
+                            </td>
+                        </tr>
+                </template>
+            </VTable>
+
+            <VPagination
+                v-model="page"
+                :length="ca.last_page"
+                @paginate="paginate"
+            />
+        </div>
     
         <div v-else
             class="flex flex-col items-center justify-center px-6 py-12 mt-8"
@@ -120,12 +130,14 @@
     import VCellIconText from '@/components/VCellIconText.vue';
     import VTable from '@/components/VTable.vue';
     import VTableAction from '@/components/VTableAction.vue';
+    import VPagination from '@/components/VPagination.vue';
     import VBreadCrumb from '@/components/VBreadCrumb.vue';
     import caService from "@/services/instances/caService";
     import provinceService from "@/services/territories/provinceService";
     import AddCA from './AddCA.vue';
     import EditCA from './EditCA.vue';
     import DeleteCA from './DeleteCA.vue';
+    import FilterCA from './FilterCA.vue';
 
 
 // Variables & state
@@ -138,9 +150,12 @@
 
     const loading = ref(false);
 
+    const page = ref(1);
+    const search = ref('');
+    
     const actions = [
         {action: 'edit', title: 'Modifier', icon: 'mdi-pencil'},
-        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline', style: '!border-t !text-red-500'},
+        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline'},
     ]
 
 // Functions
@@ -156,14 +171,21 @@
         overlay.value = !overlay.value;
     }
 
-    const handleMessage = (mssg, bool) => {
-        message.value = mssg;
-        boxMessage.value = bool;
+    const paginate = async () => {
+        await fetchAllCA();
+    }
+
+
+
+    const filterCA = async (searchCA) => {
+        search.value = searchCA;
+        page.value = 1;
+        await fetchAllCA();
     }
 
     const fetchAllCA= async () => {
         try {
-            const response = await caService.getAllCA();
+            const response = await caService.getAllCA(search.value, page.value);
             ca.value = response.data.ca;
         } catch (error) {
             console.error(error.response.data);
@@ -172,7 +194,7 @@
 
     const fetchAllProvince  = async () => {
         try {
-            const response = await provinceService.getAllProvince();
+            const response = await provinceService.listProvince();
             provinces.value = response.data.provinces;
         } catch (error) {
             console.error(error.response.data);

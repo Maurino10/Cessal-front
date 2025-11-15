@@ -2,8 +2,8 @@ import axios from '@/services/axiosInstance.js';
 
 
 export default {
-    getAllRegion() {
-        return axios.get('/regions');
+    getAllRegion(search, province, page) {
+        return axios.get(`/regions?search=${search}&province=${province}&page=${page}`);
     },
 
     createRegion(region) {
@@ -18,12 +18,7 @@ export default {
         return axios.delete(`/regions/${id}`);
     },
     
-    filterRegion(word, idProvince) {
-        return axios.get('/regions-filter', {
-          params: {
-            word: word,
-            province: idProvince
-          }
-        });
-    },
+    listRegion() {
+      return axios.get(`/region-list`);
+    }
 }

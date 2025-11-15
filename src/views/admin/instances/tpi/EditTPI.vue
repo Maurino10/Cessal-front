@@ -15,6 +15,7 @@
                     />
                 </v-col>
             </v-row>
+            
             <v-row>
                 <v-col class="!py-0">
                     <VSelect 
@@ -67,13 +68,12 @@
         </template>
         <template #card_actions>
             <VButton 
-                title="Annuler" 
-                class="btn-cancel" 
+                title="Annuler"  
                 @click="closeDialog"  
             />
             <VButton 
                 title="Mettre à jour" 
-                class="btn-submit" 
+                class="btn-primary" 
                 @click="editTPI" 
             />
         </template>

@@ -26,7 +26,7 @@
         <div class="px-8 py-6 rounded-lg custom-shadow">
             <div>
                 <div class="flex items-center justify-between">
-                    <h3 class="relative py-2 text-xl font-bold text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-500 before:bottom-0">
+                    <h3 class="relative py-2 text-xl font-bold text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-500 before:bottom-0 before:rounded-full">
                         Informations Personnelles
                     </h3>
     
@@ -141,7 +141,7 @@
     
             <div>
                 <div class="flex items-center justify-between">
-                    <h3 class="relative py-2 text-xl font-bold text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-500 before:bottom-0">
+                    <h3 class="relative py-2 text-xl font-bold text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-500 before:bottom-0 before:rounded-full">
                         Informations Professionnelles
                     </h3>
     
@@ -190,7 +190,6 @@
     import { onMounted, ref } from 'vue';
     import VBreadCrumb from '@/components/VBreadCrumb.vue';
     import VMainHeader from '@/components/VMainHeader.vue';
-    import VButton from '@/components/VButton.vue';
     import userService from '@/services/users/userService';
     import format from '@/utils/format';
     

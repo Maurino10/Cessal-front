@@ -11,7 +11,7 @@
                 </v-col>
 
                 <v-col cols="12" md="8">
-                    <div class="flex flex-col h-full gap-4 p-8 !bg-white">
+                    <div class="flex flex-col h-full gap-4 p-8 !bg-white overflow-hidden">
                         <div class="px-4">
                             <v-row>
                                 <v-col>
@@ -27,7 +27,6 @@
                             <v-window v-model="step">
                                 <v-container fluid>
                                     <v-window-item :value="0">  
-    
                                         <v-row>
                                             <v-col class="!py-0">
                                                 <VInput label="Nom" placeholder="Entrer votre nom" type="text" 
@@ -88,7 +87,6 @@
                                     </v-window-item>
                                     
                                     <v-window-item :value="1">
-    
                                         <v-row>
                                             <v-col class="!py-0">
                                                 <VAutoComplete v-if="tpi" label="TPI" placeholder="Sélectionner un TPI" :items="tpi" value="id" title="name" 
@@ -118,7 +116,6 @@
                         
                                         <v-row>
                         
-                        
                                             <v-col class="!py-0">
                                                 <VInput label="Mot de passe" placeholder="Choisissez un mot de passe sécurisé"  type="password" 
                                                     v-model:model="form.password" 
@@ -146,7 +143,7 @@
                                     <VButton
                                         title="Précédent" 
                                         icon="mdi-arrow-left-thin"
-                                        class="btn-cancel"
+                                        class="btn-secondary"
                                         v-if="step > 0" 
                                         @click="step--" 
                                     />
@@ -157,7 +154,7 @@
                                 <v-col align="end">
                                     <VButton
                                         title="Valider"
-                                        class="btn-submit"
+                                        class="btn-primary"
                                         v-if="step > 0" 
                                         @click="saveUser" 
                                         :disabled="!isSectionValid"
@@ -167,7 +164,7 @@
                                         title="Suivant" 
                                         icon="mdi-arrow-right-thin"
                                         iconPosition="right"
-                                        class="btn-submit"
+                                        class="btn-primary"
                                         v-else 
                                         @click="step++" 
                                         :disabled="!isSectionValid" 
@@ -310,9 +307,11 @@
 // Lifecycle hooks
 
     onMounted(async () => {
-        await fetchAllTPI();
-        await fetchAllPost();
-        await fetchAllGender();
+        await Promise.all([
+            fetchAllTPI(),
+            fetchAllPost(),
+            fetchAllGender(),
+        ])
     })
 
 </script>

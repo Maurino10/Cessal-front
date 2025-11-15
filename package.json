@@ -13,6 +13,7 @@
     "@vueuse/core": "^13.6.0",
     "autoprefixer": "^10.4.21",
     "axios": "^1.11.0",
+    "chart.js": "^4.5.1",
     "dayjs": "^1.11.13",
     "lodash.debounce": "^4.0.8",
     "postcss": "^8.5.6",

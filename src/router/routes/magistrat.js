@@ -14,7 +14,7 @@ const magistratRoutes = [
         },
         {
             path: 'cessions',
-            component: () => import("../../views/user/magistrat/GestionCession.vue"),
+            component: () => import("../../views/user/magistrat/cession/GestionCession.vue"),
             redirect: { name: 'magistrat-cession-list' },
             children: [
                 {
@@ -28,6 +28,13 @@ const magistratRoutes = [
                     component: () => import("../../views/user/magistrat/cession/DetailsCession.vue"),
                 },
             ]
+        },
+
+        // Mon profil
+        {
+            path: 'profil',
+            name: 'magistrat-profil',
+            component: () => import('../../views/user/magistrat/profil/DetailsProfil.vue'),
         }
     ]
   }

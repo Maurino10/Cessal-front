@@ -17,12 +17,12 @@
     text-transform: none !important;
 }
 
-.btn-submit {
+.btn-primary {
     color: #FFFFFF !important;
     background-color: #059669 !important;
 }
 
-.btn-cancel {
+.btn-secondary {
     color: #000000 !important;
     background-color: #e5e7eb !important;
 }
@@ -32,10 +32,6 @@
     background-color: #ef4444 !important;
 }
 
-.btn-add {
-    color: #FFFFFF !important;
-    background-color: #059669 !important;
-}
 
 .custom-shadow {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;

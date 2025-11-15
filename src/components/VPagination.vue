@@ -1,35 +1,22 @@
 <template>
 
-    <div class="w-full">
-        <ul class="flex justify-center w-full gap-1">
-            <li 
-                v-for="(link, index) in props.links" :key="index"
-                class="px-4 py-2 rounded-md cursor-pointer"
-                :class="{
-                    '!bg-emerald-100 !text-emerald-500' : link.active,
-                    '!text-gray-400 pointer-events-none' : link.url === null
-                }"
-                @click="goToPage(link.url)"
-            >
-                {{ link.label }}
-            </li>
-        </ul>
+    <div class="p-4">
+        <v-pagination
+            v-model="model"
+            :length="props.length"
+            total-visible="7"
+            @update:model-value="goToPage"
+        ></v-pagination>
     </div>
 
 </template>
 
 <script setup>
-    import axios from '@/services/axiosInstance.js';
-    
+    const model = defineModel();
+    const props = defineProps(['length']);
+    const emit = defineEmits(['paginate']);
 
-    const props = defineProps(['links']);
-    const emit = defineEmits(['pagination'])
-
-    const goToPage = async (url) => {
-        const path = url.replace('http://localhost:8000/api', '');
-        const response = await axios.get(path);
-        console.log(response.data)
-        
-        emit('pagination', response.data);
+    const goToPage = () => {
+        emit('paginate');
     }
 </script>

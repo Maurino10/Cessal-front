@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <Sidebar v-if="profil" :navigations="navigations" :profil="profil" @signup="signUp" />
+        <Sidebar v-if="profil" :navigations="navigations" :profil="profil" @signup="signUp" @details="detailsProfil" />
 
         <v-main> 
             <v-container>
@@ -23,6 +23,10 @@
     const navigations = [
       {icon: 'mdi-chart-donut', title: 'Cessions', link: '/administrateur/local/cessions'},
     ]
+
+    const detailsProfil = () => {
+      router.push({ name: 'admin-local-profil' });
+    }
 
     const signUp  = async () => {
         try {

@@ -9,9 +9,20 @@ const adminRoutes = [
       {
         path: 'accueil',
         name: 'admin-accueil',
-        redirect: { name: 'admin-instance-tpi' }
+        redirect: { name: 'admin-dashboard' }
       },
       
+      // Dashboard
+      {
+        path: 'dashboard',
+        name: 'admin-dashboard',
+        component: () => import('../../views/admin/dashboard/Dashboard.vue'),
+      },
+      {
+        path: 'dashboard/ca/:id',
+        name: 'admin-dashboard-ca',
+        component: () => import('../../views/admin/dashboard/DetailsCA.vue'),
+      },
       // Instances routes
       {
         path: 'instances',
@@ -101,6 +112,23 @@ const adminRoutes = [
             name: 'admin-setting-provision',
             component: () => import('../../views/admin/settings/provision/Provision.vue'),
           }
+        ]
+      },
+      {
+        path: 'cessions',
+        component: () => import("../../views/admin/cessions/GestionCession.vue"),
+        redirect: { name: 'admin-cession-list' },
+        children: [
+            {
+                path: 'liste',
+                name: 'admin-cession-list',
+                component: () => import("../../views/admin/cessions/ListCession.vue")
+            },
+            {
+                path: ':id',
+                name: 'admin-cession-details',
+                component: () => import("../../views/admin/cessions/DetailsCession.vue"),
+            },
         ]
       }
     ]

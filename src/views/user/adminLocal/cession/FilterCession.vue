@@ -10,7 +10,7 @@
             />
         </template>
         
-        <v-card min-width="300">
+        <v-card min-width="400">
             <div class="flex flex-col w-full gap-4 p-4">
                 <div class="flex-grow">
                     <label class="px-2 text-sm text-gray-400">Statut</label>
@@ -84,14 +84,14 @@
                 <div class="flex justify-between w-full gap-2">
                     <VButton 
                         title="Reset"
-                        class="btn-cancel"
+                        class="btn-secondary"
                         icon="mdi-restore"
                         @click="reset()"
                     />
                         
                     <VButton 
                         title="Filtrer"
-                        class="btn-submit"
+                        class="btn-primary"
                         icon="mdi-filter-variant"
                         @click="filter()"
                     />
@@ -99,6 +99,7 @@
             </div>
         </v-card>
     </v-menu>
+
 </template>
 
 <script setup>
@@ -109,7 +110,7 @@
     
     const emit = defineEmits(['filter']);
 
-    const statut = ref(0);
+    const statut = ref(-1);
     const dateStart = ref(null);
     const dateEnd = ref(null);
 
@@ -118,12 +119,12 @@
     const menu = ref(false);
     
     const status = [
-        {id: 0, name: 'Toutes'},
-        {id: 1, name: 'En cours de traitement'},
-        {id: 2, name: 'Acceptée'},
-        {id: 3, name: 'Refusée'},
-        {id: 4, name: 'Clôturée'},
-        {id: 5, name: 'En cours d\'exécution'},
+        {id: -1, name: 'Toutes'},
+        {id: 0, name: 'Enregistrée'},
+        {id: 1, name: 'En cours d\'approbation'},
+        {id: 2, name: 'Approuvée'},
+        {id: 3, name: 'Rejetée'},
+        {id: 4, name: 'Signée'},
     ];
 
     const validateDates =  () => {
@@ -157,7 +158,7 @@
     }
 
     const reset = () => {
-        statut.value = 0;
+        statut.value = -1;
         dateStart.value = null;
         dateEnd.value = null;
     }

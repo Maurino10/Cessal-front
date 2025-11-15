@@ -9,24 +9,24 @@
                 ></v-icon>
         </template>
 
-        <v-card>
+        <v-card class="!rounded-lg">
             <h4 class="px-4 pt-3 text-sm font-bold text-center">
                 {{ props.title }}
             </h4>
             
-            <div class="flex flex-col py-3">
+            <div class="flex flex-col px-2 py-3">
                 <a 
                     v-for="(action, index) in props.actions" :key="`${action.title}-${index}`"
                     class="item"
                     :class="action.style"
                     @click="emit('action', action.action, props.objet)"
                 >
-                    <span class="flex items-center gap-2 px-4 text-sm">
+                    <span class="flex items-center gap-4 px-4">
                         <v-icon 
                             :icon="action.icon" 
                             size="18"
                         ></v-icon>
-                        <p>{{ action.title }}</p>
+                        <p class="text-sm">{{ action.title }}</p>
                     </span>
                 </a>
             </div>
@@ -47,6 +47,7 @@
         padding: 8px 16px;
         transition: all .300s ease-in;
         color: #6b7280;
+        border-radius: 8px;
     }
 
     .item:hover {

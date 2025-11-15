@@ -1,6 +1,6 @@
 
 <template>
-  <v-app-bar height="50" class="!bg-white/80 backdrop-blur-md !shadow-sm" flat>
+  <v-app-bar height="50" class="!bg-white/80 backdrop-blur-md custom-border" flat>
       <v-container class="flex items-center justify-between">
 
         <h1 class="text-xl font-semibold">{{ props.title }}</h1>

@@ -1,5 +1,5 @@
 <template>
-    <v-table class="!rounded-lg !bg-transparent !w-full">
+    <v-table class="!bg-transparent !w-full">
         <caption>
             <slot name="caption"></slot>
         </caption>
@@ -17,7 +17,6 @@
     /* :deep(.v-table__wrapper > table) {
         table-layout: fixed;
     } */
-
     :deep(.v-table__wrapper > table > tbody > tr > td) {
         padding: 14px 24px;
     }

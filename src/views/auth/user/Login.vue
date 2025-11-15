@@ -23,6 +23,7 @@
                             Immatriculation
                         </button>
                     </div>
+                    
                     <div>
                         <v-row no-gutters>
                             <v-col>
@@ -95,7 +96,7 @@
     const form = reactive({
         login_type: null,
         login: null,
-        password: null
+        password: '123456789'
     });
 
     const errors = reactive({

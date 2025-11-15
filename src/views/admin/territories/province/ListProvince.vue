@@ -14,49 +14,55 @@
             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit." 
         >
             <template #actions>
-                <VButton title="Nouvelle province" icon="mdi-plus" class="btn-add" @click="handleAdd()"/>
+                <VButton title="Nouvelle province" icon="mdi-plus" class="btn-primary" @click="handleAdd()"/>
             </template>
         </VMainHeader>
         
-        <v-skeleton-loader
-          v-if="loading"
+        <FilterProvince
+            @filter="filterProvince"
+        />
+        <v-skeleton-loader v-if="loading"
           type="table-tbody"
           class="mt-4"
         />
-    
-        <VTable v-else-if="provinces !== null && provinces.length > 0">
-            <template #thead>
-                <tr>
-                    <th class="text-left">Carte</th>
-                    <th class="text-left">Province</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </template>
-            <template #tbody>
-                    <tr v-for="province in provinces" :key="province.name">
-                        <td>
-                            <img
-                                :src="`/src/assets/images/province/${province.name}.svg`"
-                                width="50"
-                                class="rounded-lg"
-                            />
-                        </td>
-                        
-                        <td class="font-bold">
-                            {{ province.name }}
-                        </td>
-    
-                        <td class="text-center">
-                          <VTableAction 
-                            :actions="actions" 
-                            :title="province.name" 
-                            :objet="province" 
-                            @action="handleActions" 
-                        /> 
-                        </td>
+        
+        <div v-else-if="provinces !== null && provinces.data.length > 0">
+            <VTable>
+                <template #thead>
+                    <tr>
+                        <th class="text-left">Province</th>
+                        <th class="text-center">Action</th>
                     </tr>
-            </template>
-        </VTable>
+                </template>
+                <template #tbody>
+                        <tr v-for="province in provinces.data" :key="province.name">
+                            <td>
+                                <VCellIconText
+                                    icon="mdi-map" 
+                                    :text="province.name"
+                                    iconColor="text-red-700"
+                                    bgColor="bg-red-100"
+                                /> 
+                            </td>
+        
+                            <td class="text-center">
+                              <VTableAction 
+                                :actions="actions" 
+                                :title="province.name" 
+                                :objet="province" 
+                                @action="handleActions" 
+                            /> 
+                            </td>
+                        </tr>
+                </template>
+            </VTable>
+
+            <VPagination 
+                v-model="page"
+                :length="provinces.last_page"
+                @paginate="paginate"
+            />
+        </div>
     
         <div v-else
             class="flex flex-col items-center justify-center px-6 py-12 mt-8"
@@ -103,7 +109,9 @@
 // Imports
     import { onMounted, ref } from 'vue';
     import VMainHeader from '@/components/VMainHeader.vue';
+    import VCellIconText from '@/components/VCellIconText.vue';
     import VTable from '@/components/VTable.vue';
+    import VPagination from '@/components/VPagination.vue';
     import VButton from '@/components/VButton.vue';
     import VTableAction from '@/components/VTableAction.vue';
     import provinceService from "@/services/territories/provinceService";
@@ -111,6 +119,7 @@
     import AddProvince from './AddProvince.vue';
     import EditProvince from './EditProvince.vue';
     import DeleteProvince from './DeleteProvince.vue';
+import FilterProvince from './FilterProvince.vue';
 
     
 // Variables & state
@@ -121,10 +130,13 @@
     const objet = ref(null);
 
     const loading = ref(false);
+
+    const page = ref(1);
+    const search = ref('');
     
     const actions = [
         {action: 'edit', title: 'Modifier', icon: 'mdi-pencil'},
-        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline', style: '!border-t !text-red-500'},
+        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline'},
     ]
 
 // Functions
@@ -140,9 +152,20 @@
         overlay.value = !overlay.value;
     }
 
+    const paginate = async () => {
+        await fetchAllProvince();
+    }
+
+
+    const filterProvince = async (searchProvince) => {
+        search.value = searchProvince;
+        page.value = 1;
+        await fetchAllProvince();
+    }
+
     const fetchAllProvince  = async () => {        
         try {
-            const response = await provinceService.getAllProvince();
+            const response = await provinceService.getAllProvince(search.value, page.value);
             provinces.value = response.data.provinces;
         } catch (error) {
             console.error(error.response.data);

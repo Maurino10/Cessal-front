@@ -1,8 +1,9 @@
 <template>
     <div>
-        <div class="mb-8">
-            <h3 class="relative py-2 text-xl text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-400 before:bottom-0 before:rounded-full"> 
-                3 - Informations sur le(s) emprunteurs(s)
+        <div class="mb-12">
+            <h3 class="text-2xl"> 
+                <span class="font-bold text-emerald-500">03. </span>
+                Informations sur le(s) emprunteurs(s)
             </h3>
         </div>
         
@@ -86,7 +87,7 @@
         <div class="flex justify-end mt-4">
             <VButton
                 title="Enregistrer"
-                class="btn-submit"
+                class="btn-primary"
                 :disabled="!borrowers"
                 @click="nextStep()"
             />

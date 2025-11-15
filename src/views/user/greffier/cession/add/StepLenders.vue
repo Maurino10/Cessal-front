@@ -1,8 +1,10 @@
 <template>
     <div>
-        <div class="mb-8">
-            <h3 class="relative py-2 text-xl text-emerald-500 before:absolute before:w-16 before:h-1 before:bg-emerald-400 before:bottom-0 before:rounded-full"> 
-                2 - Informations sur le(s) prêteur(s)
+        
+        <div class="mb-12">
+            <h3 class="text-2xl"> 
+                <span class="font-bold text-emerald-500">02. </span>
+                Informations sur le(s) prêteur(s)
             </h3>
         </div>
         
@@ -32,7 +34,7 @@
                         
                         <td>
                             {{ p.natural_person_address?.address }}
-                            {{ p.legal_person?.address }}
+                            {{ p.legal_person_address?.address }}
                         </td>
                         
                         <td class="font-mono">
@@ -86,7 +88,7 @@
                 title="Suivant"
                 icon="mdi-arrow-right-thin"
                 iconPosition="right"
-                class="btn-submit"
+                class="btn-primary"
                 :disabled="!lenders"
                 @click="nextStep()"
             />

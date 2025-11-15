@@ -14,13 +14,13 @@
         </template>
 
         <template #card_actions>            
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
 
-            <VButton v-if="props.cession.ordonnance" title="Enregistrer" class="btn-submit" 
+            <VButton v-if="props.cession.ordonnance" title="Enregistrer" class="btn-primary" 
                 @click="editOrdonnance" 
             />
 
-            <VButton v-else title="Enregistrer" class="btn-submit" 
+            <VButton v-else title="Enregistrer" class="btn-primary" 
                 @click="saveOrdonnance" 
             />
         </template>

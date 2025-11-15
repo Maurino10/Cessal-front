@@ -14,59 +14,65 @@
             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit." 
         >
             <template #actions>
-                <VButton title="Nouvelle région" icon="mdi-plus" class="btn-add" @click="handleAdd()"/>
+                <VButton title="Nouvelle région" icon="mdi-plus" class="btn-primary" @click="handleAdd()"/>
             </template>
     
         </VMainHeader>
-    
-        <v-skeleton-loader
-          v-if="loading"
+        
+        <FilterRegion
+            v-if="provinces"
+            :provinces="provinces"
+            @filter="filterRegion"
+        />
+        <v-skeleton-loader v-if="loading"
           type="table-tbody"
           class="mt-4"
         />
-    
-        <VTable v-else-if="regions !== null && regions.length > 0">
-    
-    
-            <template #thead>
-    
-                <tr>
-                    <th class="text-left">Carte</th>
-                    <th class="text-left">Région</th>
-                    <th class="text-left">Province</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </template>
-            
-            <template #tbody>
-                    <tr v-for="region in regions" :key="region.name">
-                        <td>
-                            <img
-                                :src="`/src/assets/images/region/${region.name}.png`"
-                                width="50"
-                                class="rounded-lg"
-                            />
-                        </td>
-    
-                        <td class="font-bold">
-                            {{ region.name }}
-                        </td>
-    
-                        <td>
-                            {{ region.province.name }}
-                        </td>
-                        
-                        <td class="text-center">
-                            <VTableAction 
-                                :actions="actions" 
-                                :title="region.name" 
-                                :objet="region" 
-                                @action="handleActions" 
-                            /> 
-                        </td>
+        
+        <div v-else-if="regions !== null && regions.data.length > 0">
+            <VTable>        
+                <template #thead>
+        
+                    <tr>
+                        <th class="text-left">Région</th>
+                        <th class="text-left">Province</th>
+                        <th class="text-center">Action</th>
                     </tr>
-            </template>
-        </VTable>
+                </template>
+                
+                <template #tbody>
+                        <tr v-for="region in regions.data" :key="region.name">
+                            <td>
+                                <VCellIconText
+                                    icon="mdi-map-marker-radius" 
+                                    :text="region.name"
+                                    iconColor="text-orange-500"
+                                    bgColor="bg-orange-100"
+                                /> 
+                            </td>
+        
+                            <td>
+                                {{ region.province.name }}
+                            </td>
+                            
+                            <td class="text-center">
+                                <VTableAction 
+                                    :actions="actions" 
+                                    :title="region.name" 
+                                    :objet="region" 
+                                    @action="handleActions" 
+                                /> 
+                            </td>
+                        </tr>
+                </template>
+            </VTable>
+
+            <VPagination
+                v-model="page"
+                :length="regions.last_page"
+                @paginate="paginate"
+            />
+        </div>
     
         <div v-else
             class="flex flex-col items-center justify-center px-6 py-12 mt-8"
@@ -118,11 +124,14 @@
     import { onMounted, ref } from 'vue';
     import VButton from '@/components/VButton.vue';
     import VMainHeader from '@/components/VMainHeader.vue';
+    import VCellIconText from '@/components/VCellIconText.vue';
     import VTable from '@/components/VTable.vue';
     import VTableAction from '@/components/VTableAction.vue';
+    import VPagination from '@/components/VPagination.vue';
     import VBreadCrumb from '@/components/VBreadCrumb.vue';
     import regionService from "@/services/territories/regionService";
     import provinceService from "@/services/territories/provinceService";
+    import FilterRegion from './FilterRegion.vue';
     import AddRegion from './AddRegion.vue';
     import EditRegion from './EditRegion.vue';
     import DeleteRegion from './DeleteRegion.vue';
@@ -135,11 +144,15 @@
     const action = ref(null);
     const objet = ref(null);
 
-    const loading = ref(false);    
+    const loading = ref(false);  
+    
+    const page = ref(1);
+    const search = ref('');
+    const selectedProvince = ref(null);
     
     const actions = [
         {action: 'edit', title: 'Modifier', icon: 'mdi-pencil'},
-        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline', style: '!border-t !text-red-500'},
+        {action: 'delete', title: 'Supprimer', icon: 'mdi-trash-can-outline'},
     ]
 
 // Functions
@@ -155,10 +168,22 @@
         overlay.value = !overlay.value;
     }
 
+    const paginate = async () => {
+        await fetchAllRegion();
+    }
+
+
+    const filterRegion = async (searchRegion, provinceSelected) => {
+        search.value = searchRegion;
+        selectedProvince.value = provinceSelected;
+        page.value = 1;
+        await fetchAllRegion();
+    }
+
 
     const fetchAllRegion = async () => {
         try {
-            const response = await regionService.getAllRegion();
+            const response = await regionService.getAllRegion(search.value, selectedProvince.value, page.value);
             regions.value = response.data.regions;
         } catch (error) {
             console.error(error.response.data);
@@ -167,7 +192,7 @@
 
     const fetchAllProvince  = async () => {
         try {
-            const response = await provinceService.getAllProvince();
+            const response = await provinceService.listProvince();
             provinces.value = response.data.provinces;
         } catch (error) {
             console.error(error.response.data);

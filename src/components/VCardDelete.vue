@@ -19,7 +19,7 @@
         </v-card-title>
         
         <v-card-actions class="!p-4">
-            <div class="flex justify-between w-full">
+            <div class="flex justify-end w-full gap-4">
                 <slot name="card_actions"></slot>
             </div>
         </v-card-actions>

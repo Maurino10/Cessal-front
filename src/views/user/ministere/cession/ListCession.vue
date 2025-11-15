@@ -7,10 +7,9 @@
     />
     
     <div class="main-body">
-        <VMainHeader
-            v-if="tpis" 
+        <VMainHeader v-if="tpis" 
             :icon="{ icon: 'mdi-chart-donut', bgColor: '!bg-teal-400'}"
-            title="Liste des Cession" 
+            title="Liste des Cessions" 
             subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit." 
         >
             <template #actions>
@@ -32,22 +31,21 @@
           class="mt-4"
         />
     
-        <div v-else-if="cessions !== null && cessions.length > 0">
-    
-    
+        <div v-else-if="cessions !== null && cessions.data.length > 0">
             <VTable>
                 <template #thead>
                     <tr>
                         <th>Numéro Dossier</th>
                         <th>Objet de la demande</th>
                         <th class="text-right">Montant à remboursé</th>
-                        <th class="text-center">Date</th>
+                        <th class="text-center">Date de cession</th>
+                        <th class="text-center">TPI</th>
                         <th>Statut</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </template>
                 <template #tbody>
-                    <tr v-for="(c, index) in cessions" :key="index">
+                    <tr v-for="(c, index) in cessions.data" :key="index">
                         <td>
                             <div class="flex items-center gap-3">
                                 <div class="flex items-center justify-center p-2 bg-teal-100 rounded-lg shadow-sm">
@@ -72,6 +70,9 @@
                             {{ format.formatDate(c.date_cession)}}
                         </td>
                         <td>
+                            {{ c.tpi.name }}
+                        </td>
+                        <td>
                             <v-chip 
                                 :color="c.status_color" 
                                 size="small"
@@ -92,7 +93,12 @@
                     </tr>
                 </template>
             </VTable>
-    
+            
+            <VPagination
+                v-model="page"
+                :length="cessions.last_page"
+                @paginate="paginate"
+            />
         </div>
     
         <div v-else
@@ -107,11 +113,6 @@
             <p class="mb-1 text-lg font-semibold text-gray-700">
                 Aucune cession trouvés
             </p>
-    
-            <!-- Texte secondaire -->
-            <p class="mb-4 text-sm text-gray-500">
-                Ajoutez une nouvelle cession pour commencer.
-            </p>
         </div>
     </div>
 </template>
@@ -123,6 +124,7 @@
     import VBreadCrumb from '@/components/VBreadCrumb.vue';
     import VMainHeader from '@/components/VMainHeader.vue';
     import VTable from '@/components/VTable.vue';
+    import VPagination from '@/components/VPagination.vue';
     import format from '@/utils/format';
     import ministereService from '@/services/cessions/ministereService';
     import tpiService from '@/services/instances/tpiService';
@@ -134,12 +136,12 @@
     
     const router = useRouter();
 
-    const loading = ref(false);
-    
+    const page = ref(1);
     const tpi = ref(null);
-    const statut = ref(0);
+    const statut = ref(-1);
     const dateStart = ref(null);
     const dateEnd = ref(null);
+    const loading = ref(false);
 
     const tpis = ref(null);
 // Functions
@@ -148,33 +150,33 @@
         router.push({ name: 'ministere-cession-details', params: { id: obj.id } })
     }
 
+    const paginate = async () => {
+        await fetchAllCession();
+    }
+
+
     const filterCession = async (tribunal, state, start, end) => {
         tpi.value = tribunal;
         statut.value = state;
         dateStart.value = start;
         dateEnd.value = end;
-        
-        try {
-            
-            const response = await ministereService.filterCession(
-                tpi.value, 
-                statut.value, 
-                dateStart.value, 
-                dateEnd.value
-            );
-            
-            cessions.value = response.data.cessions
-            
-        } catch (error) {
-            console.error(error)
-        }
+        page.value = 1;
+
+        await fetchAllCession();
     }
 
     const fetchAllCession = async() => {
         try {
             const profil = JSON.parse(localStorage.getItem('profil'));
 
-            const response = await ministereService.getAllCession();
+            const response = await ministereService.getAllCession(
+                tpi.value, 
+                statut.value, 
+                dateStart.value, 
+                dateEnd.value,
+                page.value
+            );
+            
             cessions.value = response.data.cessions
 
         } catch (error) {

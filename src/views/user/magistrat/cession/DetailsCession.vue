@@ -174,7 +174,6 @@
             const response = await magistratService.getAllCessionLenderByCession(route.params.id);
             lenders.value = response.data.lenders;
 
-            console.log(lenders.value);
         } catch (error) {
             
         }

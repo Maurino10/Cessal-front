@@ -38,8 +38,8 @@
         </template>
         
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Modifier" class="btn-submit" @click="editReferenceBorrower" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Modifier" class="btn-primary" @click="editReferenceBorrower" />
         </template>
     </VCardForm>
 </template>

@@ -1,76 +1,96 @@
 <template>
-    <div class="flex items-center justify-between">
-        <h3 class="text-xl font-bold text-gray-700">Pièces Justificatives</h3>
-
-        <VButton
-            v-if="props.cession.signed === 0"
-            title="Ajouter Pièces"
-            icon="mdi-plus"
-            class="btn-cancel"
-            @click="handleAdd"
+    <div class="px-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span>
+                    <v-icon
+                        icon="mdi-paperclip"
+                        size="32"
+                        color="#10b981"
+                    ></v-icon>
+                </span>
+    
+                <h4 class="text-xl font-bold">
+                    Pièces Justificatives
+                </h4>
+            </div>
+    
+            <VButton
+                v-if="props.cession.signed === 0"
+                title="Ajouter Pièces"
+                icon="mdi-plus"
+                class="btn-secondary"
+                @click="handleAdd"
+            />
+        </div>
+    
+        <v-skeleton-loader v-if="loading"
+          type="heading, heading"
+          class="mt-4"
         />
-    </div>
-
-    <v-skeleton-loader
-      v-if="loading"
-      type="heading, heading"
-      class="mt-4"
-    />
-    
-    <div v-else-if="justificatifs !== null && justificatifs.length > 0" class="flex flex-col gap-2 mt-6">
-        <div 
-            v-for="(justif, index) in justificatifs" :key="index"
-        >
-            <div class="flex items-center gap-3 py-4 pl-4 pr-8 border rounded-lg">
-                <v-icon
-                    icon="mdi-file-pdf-box"
-                    size="64"
-                    color="red"
-                >
-                </v-icon>
-    
-                <div class="w-full">
-                    <h4>{{ justif.name }}</h4>
-                    <p class="text-gray-500 text-caption">{{ bytesToKB(justif.size) }}</p>
-                </div>
-
-                <div class="flex gap-3">
+        
+        <div v-else-if="justificatifs !== null && justificatifs.length > 0" class="flex flex-col gap-2 mt-5">
+            <div 
+                v-for="(justif, index) in justificatifs" :key="index"
+            >
+                <div class="flex items-center gap-3 py-4 pl-4 pr-8 border rounded-lg">
                     <v-icon
-                        icon="mdi-eye-outline"
-                        size="20"
-                        class="!text-blue-600 cursor-pointer"
-                        @click="showAttachment(justif)"
-                    ></v-icon>
-                    
-                    <v-icon
-                        v-if="props.cession.signed === 0"
-                        icon="mdi-trash-can-outline"
-                        size="20"
-                        class="!text-red-500"
-                        @click="removeAttachment(justif)"
-                    ></v-icon>
+                        icon="mdi-file-pdf-box"
+                        size="64"
+                        color="red"
+                    >
+                    </v-icon>
+        
+                    <div class="w-full">
+                        <h4>{{ justif.name }}</h4>
+                        <p class="text-gray-500 text-caption">{{ bytesToKB(justif.size) }}</p>
+                    </div>
+    
+                    <div class="flex gap-3">
+                        <v-icon
+                            icon="mdi-eye-outline"
+                            size="20"
+                            class="!text-blue-600 cursor-pointer"
+                            @click="showAttachment(justif)"
+                        ></v-icon>
+                        
+                        <v-icon
+                            v-if="props.cession.signed === 0"
+                            icon="mdi-trash-can-outline"
+                            size="20"
+                            class="!text-red-500"
+                            @click="removeAttachment(justif)"
+                        ></v-icon>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    
+        <div v-else
+            class="flex flex-col items-center justify-center px-6 py-12 mt-8"
+        >
+            <!-- Icône -->
+            <v-icon size="48" class="mb-4 text-gray-400">
+                mdi-circle-off-outline
+            </v-icon>
+    
+            <!-- Texte principal -->
+            <p class="mb-1 text-lg font-semibold text-gray-700">
+                Aucune pièce justificative n’a encore été ajoutée à cette cession
+            </p>
+    
+            <!-- Texte secondaire -->
+            <p class="mb-4 text-sm text-gray-500">
+                Ajoutez les justificatifs requis afin d’assurer la conformité du dossier.
+            </p>
 
-    <div v-else
-        class="flex flex-col items-center justify-center px-6 py-12 mt-8"
-    >
-        <!-- Icône -->
-        <v-icon size="48" class="mb-4 text-gray-400">
-            mdi-circle-off-outline
-        </v-icon>
-
-        <!-- Texte principal -->
-        <p class="mb-1 text-lg font-semibold text-gray-700">
-            Aucune pièce justificative n’a encore été ajoutée à cette cession
-        </p>
-
-        <!-- Texte secondaire -->
-        <p class="mb-4 text-sm text-gray-500">
-            Ajoutez les justificatifs requis afin d’assurer la conformité du dossier.
-        </p>
+            <VButton
+                v-if="props.cession.signed === 0"
+                title="Ajouter des pièces" 
+                class="btn-primary"
+                @click="handleAdd"
+            />
+        </div>
     </div>
 </template>
 
@@ -151,6 +171,7 @@
             const response = await greffierService.getAllCessionJustificatifByCession(route.params.id);
             justificatifs.value = response.data.justifs;
             
+            console.log(justificatifs.value)
         } catch (error) {
             
         }

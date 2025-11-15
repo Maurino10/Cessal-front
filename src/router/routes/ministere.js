@@ -11,7 +11,7 @@ const ministereRoutes = [
         },
         {
             path: 'cessions',
-            component: () => import("../../views/user/ministere/GestionCession.vue"),
+            component: () => import("../../views/user/ministere/cession/GestionCession.vue"),
             redirect: { name: 'ministere-cession-list' },
             children: [
                 {
@@ -25,6 +25,13 @@ const ministereRoutes = [
                     component: () => import("../../views/user/ministere/cession/DetailsCession.vue"),
                 },
             ]
+        },
+
+        // Mon profil
+        {
+            path: 'profil',
+            name: 'ministere-profil',
+            component: () => import('../../views/user/greffier/profil/DetailsProfil.vue'),
         }
     ]
   }

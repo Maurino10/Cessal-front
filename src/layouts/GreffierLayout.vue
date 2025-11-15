@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <Sidebar v-if="profil" :navigations="navigations" :profil="profil" @signup="signUp" />
+        <Sidebar v-if="profil" :navigations="navigations" :profil="profil" @signup="signUp" @details="detailsProfil" />
 
         <v-main> 
             <v-container>
@@ -24,7 +24,11 @@
       {icon: 'mdi-chart-donut', title: 'Cessions', link: '/greffier/cessions'},
     ]
 
-    const signUp  = async () => {
+    const detailsProfil = () => {
+      router.push({ name: 'greffier-profil' });
+    }
+
+    const signUp = async () => {
       try {
           await authService.logout();
             localStorage.removeItem('token');

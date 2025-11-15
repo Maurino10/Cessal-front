@@ -16,6 +16,7 @@
                     />
                 </v-col>
             </v-row>
+            
             <v-row>
                 <v-col class="!py-0">
                     <VInputDate 
@@ -28,13 +29,12 @@
         </template>
         <template #card_actions>
             <VButton 
-                title="Annuler" 
-                class="btn-cancel" 
+                title="Annuler"  
                 @click="closeDialog"  
             />
             <VButton 
                 title="Enregistrer" 
-                class="btn-submit" 
+                class="btn-primary" 
                 @click="saveProvision" 
             />
         </template>
@@ -50,6 +50,7 @@
     import VCardForm from '@/components/VCardForm.vue';
     import provisionService from '@/services/settings/provisionService';
     import formErrorUtils from "@/utils/formErrorUtils";
+    import format from "@/utils/format";
     import { useSnackbar } from "@/composables/useSnackbar";
     import { useLoader } from "@/composables/useLoader";
 
@@ -62,7 +63,7 @@
 
     const form = reactive({
         provision_amount: null,
-        date_provision: new Date().toISOString().split("T")[0]
+        date_provision: new Date()
     })
 
     const errors = reactive({
@@ -80,7 +81,13 @@
         openLoader(true);
         
         try {
-            const response = await provisionService.createProvision(form);
+
+            const data = {
+                ...form,
+                date_provision: format.convertDate(form.date_provision)
+            }
+
+            const response = await provisionService.createProvision(data);
             
             setTimeout(() => {
                 emit('reload');

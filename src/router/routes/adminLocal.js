@@ -11,7 +11,7 @@ const adminLocalRoutes = [
         },
         {
             path: 'cessions',
-            component: () => import("../../views/user/adminLocal/GestionCession.vue"),
+            component: () => import("../../views/user/adminLocal/cession/GestionCession.vue"),
             redirect: { name: 'admin-local-cession-list' },
             children: [
                 {
@@ -25,6 +25,13 @@ const adminLocalRoutes = [
                     component: () => import("../../views/user/adminLocal/cession/DetailsCession.vue"),
                 },
             ]
+        },
+
+        // Mon profil
+        {
+            path: 'profil',
+            name: 'admin-local-profil',
+            component: () => import('../../views/user/adminLocal/profil/DetailsProfil.vue'),
         }
     ]
   }

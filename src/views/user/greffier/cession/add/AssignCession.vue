@@ -52,13 +52,13 @@
                 <v-row no-gutters>
                     <v-col class="!py-0">
                         <div>
-                            <VInput placeholder="Rerchercher un Magistrat..." v-model:model="search" />
+                            <VInput placeholder="Rechercher un Magistrat..." v-model:model="search" />
                         </div>
                     </v-col>
                 </v-row>
             </div>
             
-            <div class="mt-4">
+            <div class="mt-5">
                  <v-row 
                     v-for="(m, index) in filteredMagistrats" 
                     :key="index"

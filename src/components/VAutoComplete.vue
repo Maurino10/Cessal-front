@@ -1,5 +1,5 @@
 <template>
-    <label class="ml-2 text-sm font-medium text-gray-500">{{ props.label }}</label>
+    <label class="ml-2 text-sm font-medium leading-9 tracking-wide text-gray-500">{{ props.label }}</label>
     
     <v-autocomplete 
         v-model="model" 

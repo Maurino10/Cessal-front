@@ -43,13 +43,12 @@
         </template>
         <template #card_actions>
             <VButton 
-                title="Annuler" 
-                class="btn-cancel" 
+                title="Annuler"  
                 @click="closeDialog"  
             />
             <VButton 
                 title="Mettre à jour" 
-                class="btn-submit" 
+                class="btn-primary" 
                 @click="editDistrict" 
             />
         </template>

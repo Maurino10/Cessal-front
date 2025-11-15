@@ -82,8 +82,8 @@
         </template>
         
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Ajouter" class="btn-submit" @click="addBorrower" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Ajouter" class="btn-primary" @click="addBorrower" />
         </template>
     </VCardForm>
 </template>
@@ -189,15 +189,14 @@ import { watch } from 'vue';
 
             if (cinExists.value === true) {
                 if (typeof form.address === 'object' && form.address !== null) {
-                    console.log(form.address);
-                    const response = await greffierService.createCessionBorrowerExists(props.idCession, { 
+                    const response = await greffierService.createCessionBorrowerNaturalPersonExists(props.idCession, { 
                         natural_person: naturalPerson.value.id,
                         natural_person_address: form.address.id,
                         salary_amount: form.salary_amount,
                         remark: form.remark,
                     });
                 } else {
-                    const response = await greffierService.createCessionBorrowerExistsNewAddress(props.idCession, { 
+                    const response = await greffierService.createCessionBorrowerNaturalPersonExistsNewAddress(props.idCession, { 
                         natural_person: naturalPerson.value.id,
                         address: form.address,
                         salary_amount: form.salary_amount,

@@ -9,12 +9,12 @@
             <div>
                 <v-row>
                     <v-col>
-                        <div class="flex flex-col p-4 bg-gray-100 rounded-lg">
-                            <p class="text-base tracking-wider text-gray-500">
+                        <div class="flex flex-col px-4 py-2 border rounded-lg">
+                            <p class="text-sm leading-9 tracking-wide text-gray-400">
                                 CIN
                             </p>
 
-                            <h5 class="text-base font-medium">
+                            <h5 class="font-mono text-base">
                                 {{ props.borrower.natural_person.cin }}
                             </h5>
                         </div>
@@ -23,13 +23,13 @@
                 
                 <v-row>
                     <v-col>
-                        <div class="flex flex-col p-4 bg-gray-100 rounded-lg">
-                            <p class="text-base tracking-wider text-gray-500">
+                        <div class="flex flex-col px-4 py-2 border rounded-lg">
+                            <p class="text-sm leading-9 tracking-wide text-gray-400">
                                 Adresse
                             </p>
     
                             <h5 class="text-base font-medium">
-                                {{ props.borrower.natural_person.address }}
+                                {{ props.borrower.natural_person_address.address }}
                             </h5>
                         </div>
                     </v-col>
@@ -38,13 +38,13 @@
 
                 <v-row>
                     <v-col>
-                        <div class="flex flex-col p-4 bg-gray-100 rounded-lg">
-                            <p class="text-base tracking-wider text-gray-500">
+                        <div class="flex flex-col px-4 py-2 border rounded-lg">
+                            <p class="text-sm leading-9 tracking-wide text-gray-400">
                                 Observation
                             </p>
     
                             <h5 class="text-base font-medium">
-                                {{ props.borrower.remark }}
+                                {{ props.borrower.remark ?? 'Aucune' }}
                             </h5>
                         </div>
                     </v-col>
@@ -53,8 +53,8 @@
                 
                 <v-row>
                     <v-col>
-                        <div class="flex flex-col p-4 bg-gray-100 rounded-lg">
-                            <p class="text-base tracking-wider text-gray-500">
+                        <div class="flex flex-col px-4 py-2 border rounded-lg">
+                            <p class="text-sm leading-9 tracking-wide text-gray-400">
                                 Montant Revenu
                             </p>
 
@@ -67,12 +67,24 @@
 
                 <v-row>
                     <v-col>
-                        <VInput 
-                            label="Montant accordé"
-                            type="number"
-                            v-model:model="form.granted_amount"
-                            v-model:error="errors.granted_amount"
-                        />
+                        <div>
+                            <label class="ml-1 text-sm leading-9 tracking-wide text-gray-400">Montant accordé (en Ariary)</label>
+                            
+                            <v-text-field 
+                                v-model="form.granted_amount" 
+                                label="Montant accordé (en Ariary)"
+                                type="number"
+                                density="compact" 
+                                variant="outlined" 
+                                color="#10b981"
+                                bg-color="#f1f1f1"
+                                base-color="#f1f1f1"
+                                single-line
+                                autocomplete="off"
+                                :error-messages="errors.granted_amount ? [errors.granted_amount] : []"
+                                @update:model-value="errors.granted_amount = null"
+                            ></v-text-field>
+                        </div>
                     </v-col>
                 </v-row>
             </div>
@@ -80,14 +92,14 @@
         </template>
 
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
             
-            <VButton title="Enregistrer" class="btn-submit"
+            <VButton title="Modifier" class="btn-primary"
                 v-if="props.borrower.quota"
                 @click="editQuota" 
             />
 
-            <VButton title="Enregistrer" class="btn-submit" 
+            <VButton title="Enregistrer" class="btn-primary" 
                 v-else
                 @click="saveQuota" 
             />

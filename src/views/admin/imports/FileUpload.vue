@@ -6,6 +6,7 @@
 
         <template #card_text>
             <input @change="handleFileSelect" type="file" accept=".xlsx, .csv"  id="upload" hidden>
+            
             <label for="upload" class="cursor-pointer">
                 <p class="ml-2 text-base">Fichier</p>
                 <div class="flex gap-4 p-4 border rounded-lg">
@@ -18,6 +19,7 @@
                     </div>
                 </div>
             </label>
+            
             <p v-if="messageType === 'error'" class="text-xs text-[#B00020] pt-[6px] px-4 h-[22px]">{{ message }}</p>
 
             <div v-if="selectedFile" class="flex justify-between px-4 py-2 mt-2 bg-gray-100 rounded-lg ">
@@ -29,8 +31,8 @@
         </template>
 
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Uploader" class="btn-submit" @click="uploadFile"  />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Uploader" class="btn-primary" @click="uploadFile"  />
         </template>
 
     </VCardForm>
@@ -86,10 +88,8 @@
         formData.append('file', selectedFile.value)
 
         try {
-            const response = await tpiService.importTPI(formData);
+            const response = await tpiService.importInstance(formData);
 
-            console.log(response.data)
-            showMessage('Fichier uploadé avec succès!', 'success');
         } catch (error) {
             console.error(error)
         }

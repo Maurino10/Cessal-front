@@ -2,8 +2,8 @@ import axios from '@/services/axiosInstance.js';
 
 
 export default {
-    getAllCA() {
-        return axios.get('/ca');
+    getAllCA(search, page) {
+        return axios.get(`/ca?search=${search}&page=${page}`);
     },
 
     createCA(ca) {
@@ -18,12 +18,8 @@ export default {
         return axios.delete(`/ca/${id}`);
     },
     
-    filterCA(word, idProvince) {
-        return axios.get('/ca-filter', {
-          params: {
-            word: word,
-            province: idProvince
-          }
-        });
+    listCA() {
+        return axios.get('/ca-list');
     },
+
 }

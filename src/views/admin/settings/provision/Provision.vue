@@ -8,15 +8,16 @@
 
     <div class="main-body">
         <VMainHeader 
-            :icon="{ icon: 'mdi-tune', bgColor: '!bg-slate-500'}"
+            :icon="{ icon: 'mdi-cash', bgColor: '!bg-slate-500'}"
             title="Provision" 
             subtitle="La provision applicable aux déclarations de cession." 
         >
             <template #actions>
                 <VButton 
+                    v-if="provisions && provisions.length > 0"
                     title="Nouvelle provision" 
                     icon="mdi-plus" 
-                    class="btn-add" 
+                    class="btn-primary" 
                     @click="handleAdd"
                 />
             </template>
@@ -27,28 +28,27 @@
           class="mt-4"
         />
     
-        
-
-        <div v-else-if="provisions" class="flex flex-col gap-2">
+        <div v-else-if="provisions && provisions.length > 0" class="flex flex-col gap-2">
             <div 
                 v-for="(provision, index) in provisions" :key="index"
-                class="flex items-center justify-between p-8 rounded-lg highlight"
+                class="flex items-center justify-between p-8 border rounded-lg"
             >
                 <div class="flex items-center gap-4">
                     <v-icon 
                         icon="mdi-cash"
                         size="96"
-                        class="text-emerald-700"
+                        class="text-emerald-500"
                     ></v-icon>
-                    <h4 class="text-4xl text-white">{{ format.formatMontant(provision.provision_amount) }}</h4>
+                    <h4 class="text-4xl text-emerald-500">{{ format.formatMontant(provision.provision_amount) }}</h4>
                 </div>
-                <div class="flex flex-col gap-2 text-lg text-gray-200">
+                <div class="flex flex-col gap-2 text-lg text-gray-500">
                     <p>{{ format.formatDate(provision.date_provision) }}</p>
                 </div>
                 <div>
                     <VButton
                         title="Modifier"
                         @click="handleEdit(provision)"
+                        class="btn-secondary"
                     />
                 </div>
             </div>
@@ -73,7 +73,7 @@
             <div>
                 <VButton
                     title="Définir la provision" 
-                    class="btn-submit"
+                    class="btn-primary"
                     @click="handleAdd"
                 />
             </div>
@@ -133,6 +133,8 @@
         try {
             const response = await provisionService.getProvision();
             provisions.value = response.data.provisions;
+
+            console.log(provisions.value);
         } catch (error) {
             console.error(error.response.data);
         }

@@ -34,12 +34,12 @@
         <template #card_actions>
             <VButton 
                 title="Annuler" 
-                class="btn-cancel" 
+                class="btn-secondary" 
                 @click="closeDialog" 
             />
             <VButton 
                 title="Enregistrer" 
-                class="btn-submit" 
+                class="btn-primary" 
                 @click="saveCA" 
             />
         </template>

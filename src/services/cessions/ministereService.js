@@ -3,12 +3,8 @@ import axios from '@/services/axiosInstance.js';
 
 export default {
      
-    getAllCession() {
-        return axios.get(`/ministere/cessions`);
-    },
-
-    filterCession (tpi, statut, dateStart, dateEnd) {
-        return axios.get(`/ministere/cessions/filter?tpi=${tpi}&statut=${statut}&dateStart=${dateStart}&dateEnd=${dateEnd}`);
+    getAllCession(tpi, statut, dateStart, dateEnd, page) {
+        return axios.get(`/ministere/cessions?tpi=${tpi}&statut=${statut}&dateStart=${dateStart}&dateEnd=${dateEnd}&page=${page}`);
     },
 
     getCession (idCession) {

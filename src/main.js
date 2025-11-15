@@ -6,6 +6,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
+import { fr } from 'vuetify/locale'
 import router from './router'
 
 // const myCustomTheme = {
@@ -27,6 +28,11 @@ const vuetify = createVuetify({
   icons: {
     defaultSet: 'mdi',
   },
+  locale: {
+    locale: 'fr',
+    fallback: 'fr',
+    messages: { fr }
+  }
 })
 
 const app = createApp(App)

@@ -14,7 +14,8 @@
         ></VMainHeader>
         
         
-        <div>
+        
+        <div class="p-8 rounded-lg custom-shadow">
             <router-view></router-view>
         </div>
     </div>

@@ -3,6 +3,7 @@
         title="Modification de la cession"
         subtitle="Modifiez les informations de la cession sélectionnée"
         width="800"
+        class="h-[90vh]"
     >
         <template #card_text>
             <v-row>
@@ -46,8 +47,8 @@
         </template>
 
         <template #card_actions>
-            <VButton title="Annuler" class="btn-cancel" @click="closeDialog"  />
-            <VButton title="Mettre à jour" class="btn-submit" @click="editCession" />
+            <VButton title="Annuler" class="btn-secondary" @click="closeDialog"  />
+            <VButton title="Mettre à jour" class="btn-primary" @click="editCession" />
         </template>
     </VCardForm>
 </template>

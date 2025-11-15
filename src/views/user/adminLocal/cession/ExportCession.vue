@@ -3,14 +3,13 @@
         <template v-slot:activator="{ props }">
             <VButton
                 v-bind="props"
-                title="Rapport"
+                title="Export"
                 icon="mdi-tray-arrow-down"
-                class="btn-submit"
+                class="btn-primary"
             />
         </template>
         
         <v-card>
-
             <div class="flex flex-col py-3">
                 <a 
                     class="px-4 py-2 text-gray-500 transition-all duration-300 ease-in cursor-pointer hover:bg-gray-100"

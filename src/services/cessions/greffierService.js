@@ -3,9 +3,6 @@ import axios from '@/services/axiosInstance.js';
 
 export default {
 // --------------------------------------------- Cession
-    // createCession (infos, lenders, borrowers) {
-    //     return axios.post('/greffier/cessions', {...infos, lenders: lenders, borrowers: borrowers});
-    // },
 
     createCession (data) {
         return axios.post('/greffier/cessions', data);
@@ -23,8 +20,8 @@ export default {
         return axios.get(`/greffier/cessions/${idCession}/assign`);
     },
 
-    getAllCessionByGreffier (idUser) {
-        return axios.get(`/greffier/${idUser}/cessions`);
+    getAllCessionByGreffier (idUser, search, statut, page) {
+        return axios.get(`/greffier/${idUser}/cessions?search=${search}&statut=${statut}&page=${page}`);
     },
 
     cessionIsSigned(idCession) {
@@ -43,16 +40,20 @@ export default {
         return axios.post(`/greffier/cessions/${idCession}/lenders`, lender);
     },
 
-    createCessionLenderExists (idCession, lender) {
-        return axios.post(`/greffier/cessions/${idCession}/lenders/exists`, lender);
+    createCessionLenderNaturalPersonExists (idCession, lender) {
+        return axios.post(`/greffier/cessions/${idCession}/lenders/natural-person/exists`, lender);
     },
 
-    createCessionLenderExistsNewAddress (idCession, lender) {
-        return axios.post(`/greffier/cessions/${idCession}/lenders/exists/new-address`, lender);
+    createCessionLenderNaturalPersonExistsNewAddress (idCession, lender) {
+        return axios.post(`/greffier/cessions/${idCession}/lenders/natural-person/exists/new-address`, lender);
     },
 
-    createCessionLenderEntityExists (idCession, lender) {
-        return axios.post(`/greffier/cessions/${idCession}/lenders/entity/exists`, lender);
+    createCessionLenderLegalPersonExists (idCession, lender) {
+        return axios.post(`/greffier/cessions/${idCession}/lenders/legal-person/exists`, lender);
+    },
+
+    createCessionLenderLegalPersonExistsNewAddress (idCession, lender) {
+        return axios.post(`/greffier/cessions/${idCession}/lenders/legal-person/exists/new-address`, lender);
     },
 
     getAllCessionLenderByCession (idCession) {
@@ -77,11 +78,11 @@ export default {
         return axios.post(`/greffier/cessions/${idCession}/borrowers`, borrower);
     },
 
-    createCessionBorrowerExists (idCession, borrower) {
+    createCessionBorrowerNaturalPersonExists (idCession, borrower) {
         return axios.post(`/greffier/cessions/${idCession}/borrowers/exists`, borrower);
     },
 
-    createCessionBorrowerExistsNewAddress (idCession, borrower) {
+    createCessionBorrowerNaturalPersonExistsNewAddress (idCession, borrower) {
         return axios.post(`/greffier/cessions/${idCession}/borrowers/exists/new-address`, borrower);
     },
 
@@ -163,16 +164,20 @@ export default {
 // --------------------------------------------- Person
 
     checkCIN (cin) {
-        return axios.get(`/cession-natural_person/${cin}/check`);
+        return axios.get(`/cession-natural-person/${cin}/check`);
     },
 
     getAllAddressCessionNaturalPerson(idCessionNaturalPerson) {
-        return axios.get(`/cession-natural_person/${idCessionNaturalPerson}`);
+        return axios.get(`/cession-natural-person/${idCessionNaturalPerson}`);
     },
         
-    getEntityByTPI (idTPI) {
-        return axios.get(`/cession-legal_person/tpi/${idTPI}`);
-    }
+    getLegalPersonByTPI (idTPI) {
+        return axios.get(`/cession-legal-person/tpi/${idTPI}`);
+    },
+
+    getAllAddressCessionLegalPerson(idCessionLegalPerson) {
+        return axios.get(`/cession-legal-person/${idCessionLegalPerson}`);
+    },
 
 // --------------------------------------------- Draft
     // createDraft (data) {
